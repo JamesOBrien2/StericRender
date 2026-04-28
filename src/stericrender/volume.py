@@ -27,7 +27,7 @@ def compute_buried_volume(
     radii: np.ndarray,
     *,
     sphere_radius: float = 3.5,
-    mesh: float = 0.1,
+    mesh: float = 0.05,
 ) -> BuriedVolumeResult:
     """Compute percent buried volume within a sphere centered at the origin."""
     voxels = sphere_voxel_centers(sphere_radius, mesh)

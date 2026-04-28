@@ -1,12 +1,12 @@
 {
-  "buried_volume": 119.69000000000003,
-  "buried_voxels": 119690,
-  "free_volume": 59.68000000000001,
+  "buried_volume": 119.78025000000002,
+  "buried_voxels": 958242,
+  "free_volume": 59.76112500000002,
   "hemisphere_percent": {
-    "east": 66.27759701264385,
-    "north": 66.54619701701134,
-    "south": 66.91766153285337,
-    "west": 67.19789483277135
+    "east": 66.4527797325827,
+    "north": 66.41885995777622,
+    "south": 67.0040271082387,
+    "west": 66.97082378680437
   },
   "metadata": {
     "axis": [
@@ -29,7 +29,7 @@
     "input": "examples/sambvca/structures/complex_17.xyz",
     "map_palette": "sambvca",
     "measured_dihedral_degrees": null,
-    "mesh": 0.1,
+    "mesh": 0.05,
     "radii": "scaled-bondi",
     "render_config": "flat",
     "roll_degrees": 0.0,
@@ -57,16 +57,17 @@
       30,
       31
     ],
-    "sphere_radius": 3.5
+    "sphere_radius": 3.5,
+    "visual_mesh": 0.05
   },
-  "percent_buried": 66.72799241790712,
+  "percent_buried": 66.7145664892006,
   "quadrant_percent": {
-    "NE": 52.499679254159005,
-    "NW": 81.20258813029898,
-    "SE": 80.65372601517181,
-    "SW": 52.5882133879527
+    "NE": 51.647910768399036,
+    "NW": 80.87674590243834,
+    "SE": 80.9438665385526,
+    "SW": 53.35763517787424
   },
-  "sphere_volume": 179.37000000000003,
-  "total_voxels": 179370,
-  "voxel_volume": 0.0010000000000000002
+  "sphere_volume": 179.54137500000004,
+  "total_voxels": 1436331,
+  "voxel_volume": 0.00012500000000000003
 }

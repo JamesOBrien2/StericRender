@@ -48,7 +48,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     map_p.add_argument("--include-hydrogens", action="store_true", help="Include H atoms in steric analysis")
     map_p.add_argument("--sphere-radius", type=float, default=3.5, help="Sphere radius in Angstrom")
-    map_p.add_argument("--mesh", type=float, default=0.1, help="Voxel/map mesh spacing in Angstrom")
+    map_p.add_argument("--mesh", type=float, default=0.05, help="Voxel/map mesh spacing in Angstrom")
+    map_p.add_argument(
+        "--visual-mesh",
+        type=float,
+        default=0.05,
+        help="Topographic mesh spacing used for SVG maps and overlays; numeric grids still use --mesh",
+    )
     map_p.add_argument("--output-prefix", default="stericrender", help="Output path prefix")
     map_p.add_argument("--frames", default="all", help='1-based frame selector for multi-XYZ input, e.g. "1,4-6"')
     map_p.add_argument("--no-overlay", action="store_true", help="Skip xyzrender molecular overlay SVG")
@@ -154,6 +160,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "include_hydrogens": args.include_hydrogens,
         "sphere_radius": args.sphere_radius,
         "mesh": args.mesh,
+        "visual_mesh": args.visual_mesh,
         "map_palette": args.map_palette,
         "color_range": args.color_range,
         "render_config": args.render_config,
@@ -162,9 +169,17 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
     write_grid_csv(f"{prefix}_grid.csv", steric_map)
     write_grid_npz(f"{prefix}_grid.npz", steric_map)
     color_range = tuple(args.color_range) if args.color_range else None
+    visual_map = steric_map
+    if args.visual_mesh and args.visual_mesh < args.mesh:
+        visual_map = compute_steric_map(
+            selected_positions,
+            selected_radii,
+            sphere_radius=args.sphere_radius,
+            mesh=args.visual_mesh,
+        )
     write_map_svg(
         f"{prefix}_map.svg",
-        steric_map,
+        visual_map,
         volume,
         sphere_radius=args.sphere_radius,
         color_range=color_range,
@@ -178,7 +193,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         write_xyzrender_overlay_svg(
             oriented_xyz=oriented_xyz,
             output_svg=f"{prefix}_overlay.svg",
-            steric_map=steric_map,
+            steric_map=visual_map,
             volume=volume,
             sphere_radius=args.sphere_radius,
             render_config=args.render_config,

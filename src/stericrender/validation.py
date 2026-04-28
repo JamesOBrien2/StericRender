@@ -36,7 +36,7 @@ def morfeus_compare(
     excluded_atoms: list[int] | None = None,
     include_hydrogens: bool = False,
     sphere_radius: float = 3.5,
-    mesh: float = 0.1,
+    mesh: float = 0.05,
     density: float = 0.001,
     z_axis_atoms: list[int] | None = None,
     xz_plane_atoms: list[int] | None = None,

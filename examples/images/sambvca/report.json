@@ -1,13 +1,13 @@
 [
   {
-    "actual": 29.620895355968113,
-    "delta": 0.020895355968111318,
+    "actual": 29.612951332248624,
+    "delta": 0.012951332248622549,
     "expected": 29.6,
     "figure": "Figure 5",
     "name": "complex_01_pcy3",
     "ok": true,
     "stdout": [
-      "%VBur 29.62",
+      "%VBur 29.61",
       "Wrote examples/images/sambvca/complex_01_pcy3.json",
       "Wrote examples/images/sambvca/complex_01_pcy3_map.svg",
       "Wrote examples/images/sambvca/complex_01_pcy3_overlay.svg"
@@ -15,14 +15,14 @@
     "validated": true
   },
   {
-    "actual": 36.10079723476613,
+    "actual": 36.118137114634436,
     "delta": null,
     "expected": null,
     "figure": "Figure 5",
     "name": "complex_02_nhc_ni",
     "ok": true,
     "stdout": [
-      "%VBur 36.10",
+      "%VBur 36.12",
       "Wrote examples/images/sambvca/complex_02_nhc_ni.json",
       "Wrote examples/images/sambvca/complex_02_nhc_ni_map.svg",
       "Wrote examples/images/sambvca/complex_02_nhc_ni_overlay.svg"
@@ -30,14 +30,14 @@
     "validated": false
   },
   {
-    "actual": 43.93432569548977,
+    "actual": 43.895104958397475,
     "delta": null,
     "expected": null,
     "figure": "Figure 5",
     "name": "complex_03_nhc_ir",
     "ok": true,
     "stdout": [
-      "%VBur 43.93",
+      "%VBur 43.90",
       "Wrote examples/images/sambvca/complex_03_nhc_ir.json",
       "Wrote examples/images/sambvca/complex_03_nhc_ir_map.svg",
       "Wrote examples/images/sambvca/complex_03_nhc_ir_overlay.svg"
@@ -45,8 +45,8 @@
     "validated": false
   },
   {
-    "actual": 46.89914701455093,
-    "delta": -0.10085298544907317,
+    "actual": 46.90485688883691,
+    "delta": -0.0951431111630896,
     "expected": 47.0,
     "figure": "Figure 6",
     "name": "complex_04_meduphos",
@@ -60,8 +60,8 @@
     "validated": true
   },
   {
-    "actual": 43.79717901544294,
-    "delta": -0.0028209845570543735,
+    "actual": 43.79853947314372,
+    "delta": -0.0014605268562775109,
     "expected": 43.8,
     "figure": "Figure 6",
     "name": "complex_05_box",
@@ -75,14 +75,14 @@
     "validated": true
   },
   {
-    "actual": 53.86073479400124,
+    "actual": 53.83717262942873,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
     "name": "complex_06_diphosphine",
     "ok": true,
     "stdout": [
-      "%VBur 53.86",
+      "%VBur 53.84",
       "Wrote examples/images/sambvca/complex_06_diphosphine.json",
       "Wrote examples/images/sambvca/complex_06_diphosphine_map.svg",
       "Wrote examples/images/sambvca/complex_06_diphosphine_overlay.svg"
@@ -90,7 +90,7 @@
     "validated": false
   },
   {
-    "actual": 49.101298990912646,
+    "actual": 49.10253973492182,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
@@ -105,14 +105,14 @@
     "validated": false
   },
   {
-    "actual": 52.69164297262641,
+    "actual": 52.68270336015863,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
     "name": "complex_08_xantphos",
     "ok": true,
     "stdout": [
-      "%VBur 52.69",
+      "%VBur 52.68",
       "Wrote examples/images/sambvca/complex_08_xantphos.json",
       "Wrote examples/images/sambvca/complex_08_xantphos_map.svg",
       "Wrote examples/images/sambvca/complex_08_xantphos_overlay.svg"
@@ -120,14 +120,14 @@
     "validated": false
   },
   {
-    "actual": 47.72369961532029,
+    "actual": 47.7318250458982,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
     "name": "complex_09_diimine",
     "ok": true,
     "stdout": [
-      "%VBur 47.72",
+      "%VBur 47.73",
       "Wrote examples/images/sambvca/complex_09_diimine.json",
       "Wrote examples/images/sambvca/complex_09_diimine_map.svg",
       "Wrote examples/images/sambvca/complex_09_diimine_overlay.svg"
@@ -135,7 +135,7 @@
     "validated": false
   },
   {
-    "actual": 40.13993421419413,
+    "actual": 40.135734729668854,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
@@ -150,14 +150,14 @@
     "validated": false
   },
   {
-    "actual": 35.8961922283548,
+    "actual": 35.862624979896694,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
     "name": "complex_11_binol",
     "ok": true,
     "stdout": [
-      "%VBur 35.90",
+      "%VBur 35.86",
       "Wrote examples/images/sambvca/complex_11_binol.json",
       "Wrote examples/images/sambvca/complex_11_binol_map.svg",
       "Wrote examples/images/sambvca/complex_11_binol_overlay.svg"
@@ -165,14 +165,14 @@
     "validated": false
   },
   {
-    "actual": 36.095222166471544,
+    "actual": 36.12210555923391,
     "delta": null,
     "expected": null,
     "figure": "Figure 6",
     "name": "complex_12_bipy",
     "ok": true,
     "stdout": [
-      "%VBur 36.10",
+      "%VBur 36.12",
       "Wrote examples/images/sambvca/complex_12_bipy.json",
       "Wrote examples/images/sambvca/complex_12_bipy_map.svg",
       "Wrote examples/images/sambvca/complex_12_bipy_overlay.svg"
@@ -180,14 +180,14 @@
     "validated": false
   },
   {
-    "actual": 64.19746891899426,
-    "delta": -0.002531081005741953,
+    "actual": 64.16905295506398,
+    "delta": -0.030947044936027623,
     "expected": 64.2,
     "figure": "Figure 7",
     "name": "complex_13_salen_mn",
     "ok": true,
     "stdout": [
-      "%VBur 64.20",
+      "%VBur 64.17",
       "Wrote examples/images/sambvca/complex_13_salen_mn.json",
       "Wrote examples/images/sambvca/complex_13_salen_mn_map.svg",
       "Wrote examples/images/sambvca/complex_13_salen_mn_overlay.svg"
@@ -195,14 +195,14 @@
     "validated": true
   },
   {
-    "actual": 65.36934827451637,
-    "delta": -0.1306517254836308,
+    "actual": 65.3750423822921,
+    "delta": -0.12495761770790637,
     "expected": 65.5,
     "figure": "Figure 7",
     "name": "complex_14_chiral_salen_mn",
     "ok": true,
     "stdout": [
-      "%VBur 65.37",
+      "%VBur 65.38",
       "Wrote examples/images/sambvca/complex_14_chiral_salen_mn.json",
       "Wrote examples/images/sambvca/complex_14_chiral_salen_mn_map.svg",
       "Wrote examples/images/sambvca/complex_14_chiral_salen_mn_overlay.svg"
@@ -210,14 +210,14 @@
     "validated": true
   },
   {
-    "actual": 60.406979985504826,
-    "delta": 0.0069799855048273685,
+    "actual": 60.39875209822805,
+    "delta": -0.001247901771947113,
     "expected": 60.4,
     "figure": "Figure 7",
     "name": "complex_15_zr_complex",
     "ok": true,
     "stdout": [
-      "%VBur 60.41",
+      "%VBur 60.40",
       "Wrote examples/images/sambvca/complex_15_zr_complex.json",
       "Wrote examples/images/sambvca/complex_15_zr_complex_map.svg",
       "Wrote examples/images/sambvca/complex_15_zr_complex_overlay.svg"
@@ -225,14 +225,14 @@
     "validated": true
   },
   {
-    "actual": 64.82522160896471,
+    "actual": 64.84139101641614,
     "delta": null,
     "expected": null,
     "figure": "Figure 8",
     "name": "complex_16_c2_zirconocene",
     "ok": true,
     "stdout": [
-      "%VBur 64.83",
+      "%VBur 64.84",
       "Wrote examples/images/sambvca/complex_16_c2_zirconocene.json",
       "Wrote examples/images/sambvca/complex_16_c2_zirconocene_map.svg",
       "Wrote examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg"
@@ -240,14 +240,14 @@
     "validated": false
   },
   {
-    "actual": 66.72799241790712,
+    "actual": 66.7145664892006,
     "delta": null,
     "expected": null,
     "figure": "Figure 8",
     "name": "complex_17_substituted_zirconocene",
     "ok": true,
     "stdout": [
-      "%VBur 66.73",
+      "%VBur 66.71",
       "Wrote examples/images/sambvca/complex_17_substituted_zirconocene.json",
       "Wrote examples/images/sambvca/complex_17_substituted_zirconocene_map.svg",
       "Wrote examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg"
@@ -255,14 +255,14 @@
     "validated": false
   },
   {
-    "actual": 64.01516418576128,
+    "actual": 63.98483357944652,
     "delta": null,
     "expected": null,
     "figure": "Figure 8",
     "name": "complex_18_cs_zirconocene",
     "ok": true,
     "stdout": [
-      "%VBur 64.02",
+      "%VBur 63.98",
       "Wrote examples/images/sambvca/complex_18_cs_zirconocene.json",
       "Wrote examples/images/sambvca/complex_18_cs_zirconocene_map.svg",
       "Wrote examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg"

@@ -21,7 +21,7 @@ def compute_steric_map(
     radii: np.ndarray,
     *,
     sphere_radius: float = 3.5,
-    mesh: float = 0.1,
+    mesh: float = 0.05,
 ) -> StericMapResult:
     """Compute first occupied z value scanning from +z for each x/y point."""
     xy = np.arange(-sphere_radius, sphere_radius + mesh * 0.5, mesh)
@@ -48,4 +48,3 @@ def compute_steric_map(
                 z_values[iy, ix] = max(candidates)
 
     return StericMapResult(xy, xy, z_values)
-
