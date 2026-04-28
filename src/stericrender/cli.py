@@ -47,7 +47,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Atomic radii set",
     )
     map_p.add_argument("--include-hydrogens", action="store_true", help="Include H atoms in steric analysis")
-    map_p.add_argument("--sphere-radius", type=float, default=3.5, help="Sphere radius in Angstrom")
+    map_p.add_argument(
+        "--sphere-radius",
+        "--radius",
+        dest="sphere_radius",
+        type=float,
+        default=3.5,
+        help="Steric-map sphere radius in Angstrom",
+    )
     map_p.add_argument("--mesh", type=float, default=0.05, help="Voxel/map mesh spacing in Angstrom")
     map_p.add_argument(
         "--visual-mesh",
@@ -67,6 +74,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     map_p.add_argument("--overlay-opacity", type=float, default=0.72, help="Steric-map overlay opacity")
     map_p.add_argument("--overlay-canvas-size", type=int, default=800, help="Overlay SVG canvas size")
+    map_p.add_argument(
+        "--zoom",
+        type=float,
+        default=1.0,
+        help="Overlay zoom-out multiplier; values above 1 show more molecule around the same steric radius",
+    )
     map_p.add_argument(
         "--overlay-all-atoms",
         action="store_true",
@@ -109,6 +122,11 @@ def run_map(args: argparse.Namespace) -> None:
 
 
 def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path) -> dict:
+    if args.sphere_radius <= 0.0:
+        raise ValueError("--radius/--sphere-radius must be greater than 0")
+    if args.zoom <= 0.0:
+        raise ValueError("--zoom must be greater than 0")
+
     symbols, positions = atoms_to_arrays(frame.atoms)
     n_atoms = len(frame.atoms)
     center = parse_required_indices(args.center, n_atoms, count=1)[0]
@@ -167,6 +185,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "sphere_radius": args.sphere_radius,
         "mesh": args.mesh,
         "visual_mesh": args.visual_mesh,
+        "zoom": args.zoom,
         "map_palette": args.map_palette,
         "color_range": args.color_range,
         "render_config": args.render_config,
@@ -214,6 +233,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 sphere_radius=args.sphere_radius,
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
+                zoom=args.zoom,
                 opacity=args.overlay_opacity,
                 color_range=color_range,
                 palette=args.map_palette,
