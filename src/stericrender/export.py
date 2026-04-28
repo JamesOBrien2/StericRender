@@ -75,7 +75,7 @@ def write_map_svg(
     lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">\n',
         '<rect width="100%" height="100%" fill="#ffffff"/>\n',
-        '<style>text{font-family:Arial,sans-serif;fill:#1f2933} .small{font-size:14px} .label{font-size:18px;font-weight:700}</style>\n',
+        '<style>text{font-family:Arial,sans-serif;fill:#1f2933} .small{font-size:14px}</style>\n',
         steric_map_image_svg(
             x=steric_map.x,
             y=steric_map.y,
@@ -110,11 +110,11 @@ def write_map_svg(
             f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r_px:.2f}" fill="none" stroke="#1f2933" stroke-width="2"/>\n',
             f'<line x1="{margin}" y1="{cy:.2f}" x2="{size - margin}" y2="{cy:.2f}" stroke="#1f2933" stroke-width="1.2"/>\n',
             f'<line x1="{cx:.2f}" y1="{margin}" x2="{cx:.2f}" y2="{size - margin}" stroke="#1f2933" stroke-width="1.2"/>\n',
-            f'<text x="{margin}" y="34" class="label">%VBur = {volume.percent_buried:.2f}</text>\n',
             f'<text x="{margin + plot_size - 32}" y="{margin - 14}" class="small">NE</text>\n',
             f'<text x="{margin + 12}" y="{margin - 14}" class="small">NW</text>\n',
             f'<text x="{margin + 12}" y="{margin + plot_size + 24}" class="small">SW</text>\n',
             f'<text x="{margin + plot_size - 32}" y="{margin + plot_size + 24}" class="small">SE</text>\n',
+            vbur_label_svg(cx, margin + plot_size + 52, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
     if show_colorbar:
@@ -131,3 +131,25 @@ def write_map_svg(
         )
     lines.append("</svg>\n")
     Path(path).write_text("".join(lines))
+
+
+def vbur_label_svg(
+    x: float,
+    y: float,
+    percent_buried: float,
+    *,
+    value_size: int = 24,
+    label_size: int = 20,
+    fill: str = "#111827",
+) -> str:
+    """Return a compact typographic label for the buried-volume value."""
+    sub_size = max(10, int(label_size * 0.58))
+    return (
+        f'<g class="stericrender-vbur-label" transform="translate({x:.2f} {y:.2f})">\n'
+        f'  <text text-anchor="middle" font-family="Arial,sans-serif" fill="{fill}">'
+        f'<tspan font-size="{label_size}" font-weight="600">%V</tspan>'
+        f'<tspan font-size="{sub_size}" baseline-shift="sub" font-weight="600">Bur</tspan>'
+        f'<tspan dx="9" font-size="{value_size}" font-weight="700">{percent_buried:.2f}</tspan>'
+        "</text>\n"
+        "</g>\n"
+    )

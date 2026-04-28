@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from stericrender.maps import StericMapResult
+from stericrender.export import vbur_label_svg
 from stericrender.visual import colorbar_svg, contour_segments, steric_map_image_svg
 from stericrender.volume import BuriedVolumeResult
 
@@ -49,9 +50,8 @@ def write_xyzrender_overlay_svg(
     scale = (canvas_size - 2.0 * cfg.padding) / cfg.fixed_span
     r = sphere_radius * scale
     molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r)
-    colorbar_height = 84 if show_colorbar else 0
-    if colorbar_height:
-        molecule_svg = _expand_svg_height(molecule_svg, height + colorbar_height)
+    footer_height = 132 if show_colorbar else 64
+    molecule_svg = _expand_svg_height(molecule_svg, height + footer_height)
     layer = steric_overlay_layer(
         steric_map,
         volume,
@@ -133,8 +133,7 @@ def steric_overlay_layer(
             f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}" fill="none" stroke="#111827" stroke-width="1.6"/>\n',
             f'    <line x1="{cx-r:.2f}" y1="{cy:.2f}" x2="{cx+r:.2f}" y2="{cy:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
             f'    <line x1="{cx:.2f}" y1="{cy-r:.2f}" x2="{cx:.2f}" y2="{cy+r:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
-            f'    <text x="{cx-r+8:.2f}" y="{cy-r+22:.2f}" font-family="Arial,sans-serif" font-size="15" '
-            f'fill="#111827">%VBur {volume.percent_buried:.2f}</text>\n',
+            vbur_label_svg(cx, height + 40.0, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
     if show_colorbar:
@@ -142,7 +141,7 @@ def steric_overlay_layer(
         lines.append(
             colorbar_svg(
                 x=(width - bar_width) / 2.0,
-                y=height + 18.0,
+                y=height + 76.0,
                 width=bar_width,
                 height=16.0,
                 vmin=z_min,

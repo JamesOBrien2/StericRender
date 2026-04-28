@@ -93,7 +93,8 @@ def test_overlay_layer_includes_full_opacity_colorbar():
 
     assert 'id="stericrender-map-layer" opacity="0.720"' in svg
     assert 'class="stericrender-colorbar"' in svg
-    assert '%VBur 50.00' in svg
+    assert 'class="stericrender-vbur-label"' in svg
+    assert ">50.00</tspan>" in svg
 
 
 def test_clip_molecule_to_disk_wraps_structure_but_keeps_background_unclipped():
