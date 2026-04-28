@@ -81,10 +81,3 @@ Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
 `--config`, `--overlay-opacity`, `--no-contours`, `--no-colorbar`,
 `--no-overlay`.
-
-## Validate
-
-```bash
-python -m pip install -e ".[test]"
-python -m pytest -q
-```
