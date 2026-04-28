@@ -1,6 +1,7 @@
 import numpy as np
 
 from stericrender.maps import StericMapResult
+from stericrender.export import write_map_svg
 from stericrender.overlay import _clip_molecule_to_disk, steric_overlay_layer
 from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_image_svg, steric_map_rgba
 from stericrender.volume import BuriedVolumeResult
@@ -71,6 +72,31 @@ def test_contour_segments_find_crossing():
     z = np.array([[0.0, 1.0], [1.0, 0.0]])
     segments = contour_segments(x, y, z, np.array([0.5]))
     assert len(segments) == 2
+
+
+def test_map_svg_quadrant_labels_are_opt_in(tmp_path):
+    steric_map = StericMapResult(
+        x=np.array([-1.0, 0.0, 1.0]),
+        y=np.array([-1.0, 0.0, 1.0]),
+        z=np.array([[np.nan, 0.0, np.nan], [1.0, 2.0, 1.0], [np.nan, 0.0, np.nan]]),
+    )
+    volume = BuriedVolumeResult(50.0, 1.0, 2.0, 1.0, 0.1, 10, 20, {}, {})
+    default_path = tmp_path / "default.svg"
+    labelled_path = tmp_path / "labelled.svg"
+
+    write_map_svg(default_path, steric_map, volume, sphere_radius=1.0)
+    write_map_svg(labelled_path, steric_map, volume, sphere_radius=1.0, show_quadrant_labels=True)
+
+    default_svg = default_path.read_text()
+    labelled_svg = labelled_path.read_text()
+    assert ">NE</text>" not in default_svg
+    assert ">NW</text>" not in default_svg
+    assert ">SW</text>" not in default_svg
+    assert ">SE</text>" not in default_svg
+    assert ">NE</text>" in labelled_svg
+    assert ">NW</text>" in labelled_svg
+    assert ">SW</text>" in labelled_svg
+    assert ">SE</text>" in labelled_svg
 
 
 def test_overlay_layer_includes_full_opacity_colorbar():

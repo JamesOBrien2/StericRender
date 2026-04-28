@@ -23,9 +23,9 @@ stericrender map examples/simple.xyz \
   --output-prefix results/simple
 ```
 
-| Steric map | Overlay |
+| Overlay | Steric map |
 |---|---|
-| ![simple map](examples/images/simple_map.svg) | ![simple overlay](examples/images/simple_overlay.svg) |
+| <img src="examples/images/simple_overlay.svg" alt="simple overlay" width="300"> | <img src="examples/images/simple_map.svg" alt="simple map" width="300"> |
 
 ## Gallery
 
@@ -96,8 +96,8 @@ results/complex_oriented.xyz
 
 Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
-`--config`, `--overlay-opacity`, `--no-contours`, `--no-colorbar`,
-`--no-overlay`.
+`--config`, `--overlay-opacity`, `--overlay-all-atoms`,
+`--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.
 
 ## Validate
 

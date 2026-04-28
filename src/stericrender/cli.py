@@ -68,6 +68,11 @@ def build_parser() -> argparse.ArgumentParser:
     map_p.add_argument("--overlay-opacity", type=float, default=0.72, help="Steric-map overlay opacity")
     map_p.add_argument("--overlay-canvas-size", type=int, default=800, help="Overlay SVG canvas size")
     map_p.add_argument(
+        "--overlay-all-atoms",
+        action="store_true",
+        help="Render all oriented atoms in overlay SVGs, including atoms excluded from steric analysis",
+    )
+    map_p.add_argument(
         "--map-palette",
         choices=sorted(PALETTES),
         default="sambvca",
@@ -82,6 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     map_p.add_argument("--no-colorbar", action="store_true", help="Hide colorbar on map and overlay SVGs")
     map_p.add_argument("--no-contours", action="store_true", help="Hide contour lines on map and overlay SVGs")
+    map_p.add_argument("--show-quadrants", action="store_true", help="Show NE/NW/SW/SE quadrant labels on map SVGs")
     return parser
 
 
@@ -164,6 +170,8 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "map_palette": args.map_palette,
         "color_range": args.color_range,
         "render_config": args.render_config,
+        "show_quadrants": args.show_quadrants,
+        "overlay_all_atoms": args.overlay_all_atoms,
     }
     write_json(prefix.with_suffix(".json"), volume, metadata)
     write_grid_csv(f"{prefix}_grid.csv", steric_map)
@@ -186,24 +194,35 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         palette=args.map_palette,
         show_colorbar=not args.no_colorbar,
         show_contours=not args.no_contours,
+        show_quadrant_labels=args.show_quadrants,
     )
     oriented_xyz = Path(f"{prefix}_oriented.xyz")
     write_xyz(arrays_to_atoms(symbols, oriented.positions), oriented_xyz, title="StericRender oriented")
     if not args.no_overlay:
-        write_xyzrender_overlay_svg(
-            oriented_xyz=oriented_xyz,
-            output_svg=f"{prefix}_overlay.svg",
-            steric_map=visual_map,
-            volume=volume,
-            sphere_radius=args.sphere_radius,
-            render_config=args.render_config,
-            canvas_size=args.overlay_canvas_size,
-            opacity=args.overlay_opacity,
-            color_range=color_range,
-            palette=args.map_palette,
-            show_contours=not args.no_contours,
-            show_colorbar=not args.no_colorbar,
-        )
+        overlay_xyz = oriented_xyz
+        if not args.overlay_all_atoms:
+            overlay_xyz = Path(f"{prefix}_overlay_atoms.xyz")
+            overlay_symbols = [symbols[idx] for idx in selected]
+            overlay_positions = oriented.positions[selected]
+            write_xyz(arrays_to_atoms(overlay_symbols, overlay_positions), overlay_xyz, title="StericRender overlay atoms")
+        try:
+            write_xyzrender_overlay_svg(
+                oriented_xyz=overlay_xyz,
+                output_svg=f"{prefix}_overlay.svg",
+                steric_map=visual_map,
+                volume=volume,
+                sphere_radius=args.sphere_radius,
+                render_config=args.render_config,
+                canvas_size=args.overlay_canvas_size,
+                opacity=args.overlay_opacity,
+                color_range=color_range,
+                palette=args.map_palette,
+                show_contours=not args.no_contours,
+                show_colorbar=not args.no_colorbar,
+            )
+        finally:
+            if overlay_xyz != oriented_xyz:
+                overlay_xyz.unlink(missing_ok=True)
     print(f"%VBur {volume.percent_buried:.2f}")
     print(f"Wrote {prefix.with_suffix('.json')}")
     print(f"Wrote {prefix}_map.svg")
