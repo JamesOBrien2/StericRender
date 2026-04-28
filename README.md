@@ -78,6 +78,6 @@ results/complex_oriented.xyz
 ```
 
 Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
-`--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
-`--config`, `--overlay-opacity`, `--overlay-all-atoms`,
+`--include-hydrogens`, `--sphere-radius`/`--radius`, `--mesh`, `--visual-mesh`,
+`--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
 `--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.

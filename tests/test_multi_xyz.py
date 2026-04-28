@@ -78,3 +78,38 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
     assert captured["overlay_xyz_text"].count("\nP  ") == 1
     assert captured["overlay_xyz_text"].count("\nC  ") == 3
     assert not (tmp_path / "simple_overlay_atoms.xyz").exists()
+
+
+def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        captured["sphere_radius"] = kwargs["sphere_radius"]
+        captured["zoom"] = kwargs["zoom"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "map",
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--radius",
+            "4.25",
+            "--zoom",
+            "1.75",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured == {"sphere_radius": 4.25, "zoom": 1.75}
+    assert metadata["sphere_radius"] == 4.25
+    assert metadata["zoom"] == 1.75

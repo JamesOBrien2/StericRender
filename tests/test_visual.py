@@ -4,7 +4,7 @@ import numpy as np
 
 from stericrender.maps import StericMapResult
 from stericrender.export import write_map_svg
-from stericrender.overlay import _clip_molecule_to_disk, steric_overlay_layer
+from stericrender.overlay import _clip_molecule_to_disk, _clip_molecule_to_viewport, steric_overlay_layer
 from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg, steric_map_rgba
 from stericrender.volume import BuriedVolumeResult
 
@@ -186,4 +186,14 @@ def test_clip_molecule_to_disk_wraps_structure_but_keeps_background_unclipped():
 
     assert 'clipPath id="stericrender-map-clip"' in clipped
     assert '<g id="stericrender-molecule" clip-path="url(#stericrender-map-clip)">' in clipped
+    assert clipped.index('<rect width="100%"') < clipped.index('id="stericrender-molecule"')
+
+
+def test_clip_molecule_to_viewport_does_not_add_disk_clip():
+    svg = '<svg viewBox="0 0 100 100" width="100" height="100">\n<rect width="100%" height="100%" fill="#fff"/>\n<circle cx="120" cy="50" r="10"/>\n</svg>'
+
+    clipped = _clip_molecule_to_viewport(svg)
+
+    assert 'clipPath id="stericrender-map-clip"' not in clipped
+    assert '<g id="stericrender-molecule">' in clipped
     assert clipped.index('<rect width="100%"') < clipped.index('id="stericrender-molecule"')
