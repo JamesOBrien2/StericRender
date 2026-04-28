@@ -4,11 +4,9 @@
 
 Steric maps and buried-volume figures, oriented with `xyzrender`.
 
-| Steric map | Overlay |
+| Overlay | Steric map |
 |---|---|
-| ![example overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg) | ![example map](examples/images/sambvca/complex_04_meduphos_map.svg) | 
-
-
+| <img src="examples/images/sambvca/complex_04_meduphos_overlay.svg" alt="example overlay" width="300"> | <img src="examples/images/sambvca/complex_04_meduphos_map.svg" alt="example map" width="300"> |
 
 ## Gallery
 
@@ -79,5 +77,5 @@ results/complex_oriented.xyz
 
 Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
-`--config`, `--overlay-opacity`, `--no-contours`, `--no-colorbar`,
-`--no-overlay`.
+`--config`, `--overlay-opacity`, `--overlay-all-atoms`,
+`--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.

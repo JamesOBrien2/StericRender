@@ -3,6 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from stericrender import cli
 from stericrender.io import load_xyz_frames
 
 
@@ -43,3 +44,37 @@ def test_cli_multi_xyz_selected_frames(tmp_path):
     assert summary.is_file()
     assert json.loads(frame_13.read_text())["metadata"]["frame"] == 13
     assert len(json.loads(summary.read_text())) == 2
+
+
+def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        overlay_xyz = Path(kwargs["oriented_xyz"])
+        captured["overlay_xyz_name"] = overlay_xyz.name
+        captured["overlay_xyz_text"] = overlay_xyz.read_text()
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "map",
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    assert captured["overlay_xyz_name"] == "simple_overlay_atoms.xyz"
+    assert captured["overlay_xyz_text"].splitlines()[0] == "4"
+    assert "Pd" not in captured["overlay_xyz_text"]
+    assert captured["overlay_xyz_text"].count("\nP  ") == 1
+    assert captured["overlay_xyz_text"].count("\nC  ") == 3
+    assert not (tmp_path / "simple_overlay_atoms.xyz").exists()
