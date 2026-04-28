@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from stericrender.maps import StericMapResult
-from stericrender.visual import colorbar_svg, contour_segments, steric_map_image_svg
+from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -92,6 +92,14 @@ def write_map_svg(
             opacity=0.96,
             pixels=1000,
             bands=34,
+        ),
+        steric_map_edge_svg(
+            x=steric_map.x,
+            y=steric_map.y,
+            z=steric_map.z,
+            sx=sx,
+            sy=sy,
+            stroke_width=max(2.0, plot_size / (2.0 * sphere_radius) * 0.04),
         ),
     ]
     if show_contours and finite.size:

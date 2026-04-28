@@ -5,7 +5,7 @@ import numpy as np
 from stericrender.maps import StericMapResult
 from stericrender.export import write_map_svg
 from stericrender.overlay import _clip_molecule_to_disk, steric_overlay_layer
-from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_image_svg, steric_map_rgba
+from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg, steric_map_rgba
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -44,6 +44,25 @@ def test_steric_map_image_svg_embeds_png_data_uri():
 
     assert 'class="stericrender-filled-map"' in svg
     assert "data:image/png;base64," in svg
+
+
+def test_steric_map_edge_svg_traces_finite_boundary():
+    x = np.array([-1.0, 0.0, 1.0])
+    y = np.array([-1.0, 0.0, 1.0])
+    z = np.array([[1.0, 1.0, np.nan], [1.0, 1.0, np.nan], [np.nan, np.nan, np.nan]])
+
+    svg = steric_map_edge_svg(
+        x=x,
+        y=y,
+        z=z,
+        sx=lambda value: 10.0 + value,
+        sy=lambda value: 20.0 - value,
+        stroke_width=3.0,
+    )
+
+    assert 'class="stericrender-map-edge-cleanup"' in svg
+    assert 'stroke-width="3.00"' in svg
+    assert "<path " in svg
 
 
 def test_steric_map_rgba_antialiases_circular_edge():
