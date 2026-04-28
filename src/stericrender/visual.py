@@ -89,6 +89,33 @@ def steric_map_image_svg(
     )
 
 
+def steric_map_edge_svg(
+    *,
+    x: np.ndarray,
+    y: np.ndarray,
+    z: np.ndarray,
+    sx,
+    sy,
+    stroke_width: float,
+    stroke: str = "#ffffff",
+) -> str:
+    """Return vector strokes that clean up finite/no-data map edges."""
+    finite = np.isfinite(z).astype(float)
+    segments = contour_segments(x, y, finite, np.array([0.5]))
+    if not segments:
+        return ""
+    commands = " ".join(
+        f"M {sx(x1):.2f} {sy(y1):.2f} L {sx(x2):.2f} {sy(y2):.2f}"
+        for x1, y1, x2, y2 in segments
+    )
+    return (
+        f'<g class="stericrender-map-edge-cleanup" fill="none" stroke="{stroke}" '
+        f'stroke-width="{stroke_width:.2f}" stroke-linecap="round" stroke-linejoin="round">\n'
+        f'<path d="{commands}"/>\n'
+        "</g>\n"
+    )
+
+
 def steric_map_png_data_uri(
     *,
     x: np.ndarray,
