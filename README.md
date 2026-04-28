@@ -66,6 +66,19 @@ stericrender map complex.xyz \
   --output-prefix results/complex
 ```
 
+Radius and zoom examples:
+
+```bash
+# Increase the analytical steric-map sphere radius.
+stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --radius 4.5
+
+# Zoom the overlay out while keeping the steric-map radius unchanged.
+stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --zoom 1.6
+
+# Combine a larger steric-map radius with a wider overlay view.
+stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --radius 4.5 --zoom 1.6
+```
+
 Outputs:
 
 ```text
