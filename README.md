@@ -2,30 +2,11 @@
   <img src="StericRender_colour.svg" alt="StericRender" width="720">
 </p>
 
-# StericRender
-
 Steric maps and buried-volume figures, oriented with `xyzrender`.
-
-![StericRender overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg)
-
-```bash
-python -m pip install -e .
-```
-
-```bash
-stericrender map examples/simple.xyz \
-  --center 1 \
-  --axis 2 \
-  --dihedral 3,1,2,4 \
-  --exclude 1 \
-  --config flat \
-  --color-range -3 3 \
-  --output-prefix results/simple
-```
 
 | Overlay | Steric map |
 |---|---|
-| <img src="examples/images/simple_overlay.svg" alt="simple overlay" width="300"> | <img src="examples/images/simple_map.svg" alt="simple map" width="300"> |
+| <img src="examples/images/sambvca/complex_04_meduphos_overlay.svg" alt="example overlay" width="300"> | <img src="examples/images/sambvca/complex_04_meduphos_map.svg" alt="example map" width="300"> |
 
 ## Gallery
 
@@ -98,10 +79,3 @@ Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
 `--config`, `--overlay-opacity`, `--overlay-all-atoms`,
 `--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.
-
-## Validate
-
-```bash
-python -m pip install -e ".[test]"
-python -m pytest -q
-```
