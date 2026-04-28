@@ -99,7 +99,7 @@ def steric_map_edge_svg(
     sy,
     stroke_width: float,
     outline_width: float = 1.15,
-    stroke: str = "#ffffff",
+    stroke: str = "#111827",
     outline: str = "#111827",
 ) -> str:
     """Return vector strokes that clean up finite/no-data map edges."""
