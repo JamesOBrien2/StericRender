@@ -43,6 +43,7 @@
       4,
       5
     ],
+    "show_quadrants": false,
     "sphere_radius": 3.5,
     "visual_mesh": 0.05
   },

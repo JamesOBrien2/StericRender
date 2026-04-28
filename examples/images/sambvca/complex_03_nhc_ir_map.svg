@@ -3250,10 +3250,6 @@
 <circle cx="325.00" cy="325.00" r="255.00" fill="none" stroke="#1f2933" stroke-width="2"/>
 <line x1="70" y1="325.00" x2="650" y2="325.00" stroke="#1f2933" stroke-width="1.2"/>
 <line x1="325.00" y1="70" x2="325.00" y2="650" stroke="#1f2933" stroke-width="1.2"/>
-<text x="548" y="56" class="small">NE</text>
-<text x="82" y="56" class="small">NW</text>
-<text x="82" y="604" class="small">SW</text>
-<text x="548" y="604" class="small">SE</text>
 <g class="stericrender-vbur-label" transform="translate(325.00 632.00)">
   <text text-anchor="middle" font-family="Arial,sans-serif" fill="#111827"><tspan font-size="21" font-weight="600">%V</tspan><tspan font-size="12" baseline-shift="sub" font-weight="600">Bur</tspan><tspan dx="9" font-size="25" font-weight="700">43.90</tspan></text>
 </g>

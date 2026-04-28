@@ -57,6 +57,7 @@ def write_map_svg(
     palette: str = "sambvca",
     show_colorbar: bool = True,
     show_contours: bool = True,
+    show_quadrant_labels: bool = False,
 ) -> None:
     """Write a compact standalone SVG heat-map representation."""
     margin = 70
@@ -110,13 +111,18 @@ def write_map_svg(
             f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r_px:.2f}" fill="none" stroke="#1f2933" stroke-width="2"/>\n',
             f'<line x1="{margin}" y1="{cy:.2f}" x2="{size - margin}" y2="{cy:.2f}" stroke="#1f2933" stroke-width="1.2"/>\n',
             f'<line x1="{cx:.2f}" y1="{margin}" x2="{cx:.2f}" y2="{size - margin}" stroke="#1f2933" stroke-width="1.2"/>\n',
-            f'<text x="{margin + plot_size - 32}" y="{margin - 14}" class="small">NE</text>\n',
-            f'<text x="{margin + 12}" y="{margin - 14}" class="small">NW</text>\n',
-            f'<text x="{margin + 12}" y="{margin + plot_size + 24}" class="small">SW</text>\n',
-            f'<text x="{margin + plot_size - 32}" y="{margin + plot_size + 24}" class="small">SE</text>\n',
-            vbur_label_svg(cx, margin + plot_size + 52, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
+    if show_quadrant_labels:
+        lines.extend(
+            [
+                f'<text x="{margin + plot_size - 32}" y="{margin - 14}" class="small">NE</text>\n',
+                f'<text x="{margin + 12}" y="{margin - 14}" class="small">NW</text>\n',
+                f'<text x="{margin + 12}" y="{margin + plot_size + 24}" class="small">SW</text>\n',
+                f'<text x="{margin + plot_size - 32}" y="{margin + plot_size + 24}" class="small">SE</text>\n',
+            ]
+        )
+    lines.append(vbur_label_svg(cx, margin + plot_size + 52, volume.percent_buried, value_size=25, label_size=21))
     if show_colorbar:
         lines.append(
             colorbar_svg(
