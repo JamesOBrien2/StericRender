@@ -4,11 +4,6 @@
 
 Steric maps and buried-volume figures, oriented with `xyzrender`.
 
-| Steric map | Overlay |
-|---|---|
-| ![example map](examples/images/sambvca/complex_04_meduphos_map.svg) | ![example overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg) |
-
-
 ```bash
 python -m pip install -e .
 ```
@@ -23,6 +18,11 @@ stericrender map examples/simple.xyz \
   --color-range -3 3 \
   --output-prefix results/simple
 ```
+
+| Steric map | Overlay |
+|---|---|
+| ![example overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg) | ![example map](examples/images/sambvca/complex_04_meduphos_map.svg) | 
+
 
 
 ## Gallery
