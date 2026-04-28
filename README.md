@@ -21,33 +21,33 @@ python scripts/run_examples.py --with-overlay --output-dir examples/images/sambv
 
 ### Monocoordinated Ligands
 
-| 1 PCy3, 29.61 [ref] | 2 NHC-Ni, 36.12 | 3 NHC-Ir, 43.90 |
+| PCy3 [ref] | NHC-Ni | NHC-Ir |
 |---|---|---|
 | ![complex 1](examples/images/sambvca/complex_01_pcy3_overlay.svg) | ![complex 2](examples/images/sambvca/complex_02_nhc_ni_overlay.svg) | ![complex 3](examples/images/sambvca/complex_03_nhc_ir_overlay.svg) |
 
 ### Dicoordinated Ligands
 
-| 4 MeDuPhos, 46.90 [ref] | 5 Box, 43.80 [ref] | 6 Diphosphine, 53.84 |
+| MeDuPhos | Box [ref] | Diphosphine |
 |---|---|---|
 | ![complex 4](examples/images/sambvca/complex_04_meduphos_overlay.svg) | ![complex 5](examples/images/sambvca/complex_05_box_overlay.svg) | ![complex 6](examples/images/sambvca/complex_06_diphosphine_overlay.svg) |
 
-| 7 PHOX, 49.10 | 8 Xantphos, 52.68 | 9 Diimine, 47.73 |
+| PHOX | Xantphos | Diimine |
 |---|---|---|
 | ![complex 7](examples/images/sambvca/complex_07_phox_overlay.svg) | ![complex 8](examples/images/sambvca/complex_08_xantphos_overlay.svg) | ![complex 9](examples/images/sambvca/complex_09_diimine_overlay.svg) |
 
-| 10 TADDOL, 40.14 | 11 BINOL, 35.86 | 12 Bipy, 36.12 |
+| TADDOL | BINOL | Bipy |
 |---|---|---|
 | ![complex 10](examples/images/sambvca/complex_10_taddol_overlay.svg) | ![complex 11](examples/images/sambvca/complex_11_binol_overlay.svg) | ![complex 12](examples/images/sambvca/complex_12_bipy_overlay.svg) |
 
 ### Tetracoordinated Ligands
 
-| 13 Salen-Mn, 64.17 [ref] | 14 Chiral salen-Mn, 65.38 [ref] | 15 Zr-ONNO, 60.40 [ref] |
+| Salen-Mn [ref] | Chiral salen-Mn [ref] | Zr-ONNO [ref] |
 |---|---|---|
 | ![complex 13](examples/images/sambvca/complex_13_salen_mn_overlay.svg) | ![complex 14](examples/images/sambvca/complex_14_chiral_salen_mn_overlay.svg) | ![complex 15](examples/images/sambvca/complex_15_zr_complex_overlay.svg) |
 
 ### Zirconocenes
 
-| 16 C2 zirconocene, 64.84 | 17 Substituted zirconocene, 66.71 | 18 Cs zirconocene, 63.98 |
+| C2 zirconocene | Substituted zirconocene | Cs zirconocene |
 |---|---|---|
 | ![complex 16](examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg) | ![complex 17](examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg) | ![complex 18](examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg) |
 
