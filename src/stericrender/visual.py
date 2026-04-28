@@ -155,7 +155,6 @@ def steric_map_rgba(
     inside = circle & (ix >= 0) & (iy >= 0) & (ix + 1 < len(x)) & (iy + 1 < len(y))
 
     values = np.full((pixels, pixels), np.nan, dtype=float)
-    coverage = np.zeros((pixels, pixels), dtype=float)
     if np.any(inside):
         rows, cols = np.where(inside)
         ixv = ix[rows, cols]
@@ -190,9 +189,18 @@ def steric_map_rgba(
             1.0,
         )
         values[rows[finite], cols[finite]] = sampled[finite]
-        coverage[rows[finite], cols[finite]] = weight_sum[finite]
+    valid_coverage, edge_values = _supersampled_valid_coverage(
+        x=x,
+        y=y,
+        z=z,
+        sphere_radius=sphere_radius,
+        pixels=pixels,
+        samples=4,
+    )
 
-    valid = np.isfinite(values)
+    edge = ~np.isfinite(values) & (valid_coverage > 0.0) & np.isfinite(edge_values)
+    values[edge] = edge_values[edge]
+    valid = np.isfinite(values) & (valid_coverage > 0.0)
     out = np.zeros((pixels, pixels, 4), dtype=np.uint8)
     if np.any(valid):
         clipped = np.clip(values[valid], vmin, vmax)
@@ -200,9 +208,94 @@ def steric_map_rgba(
         banded = levels[nearest]
         colors = np.array([rgb_for_value(float(value), vmin, vmax, palette) for value in banded], dtype=np.uint8)
         out[valid, :3] = colors
-        alpha = alpha_mask[valid] * np.clip(coverage[valid], 0.0, 1.0)
+        alpha = alpha_mask[valid] * np.clip(valid_coverage[valid], 0.0, 1.0)
         out[valid, 3] = np.round(255.0 * alpha).astype(np.uint8)
     return out
+
+
+def _supersampled_valid_coverage(
+    *,
+    x: np.ndarray,
+    y: np.ndarray,
+    z: np.ndarray,
+    sphere_radius: float,
+    pixels: int,
+    samples: int = 4,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return subpixel coverage and fallback colours for finite map regions."""
+    x0 = float(x[0])
+    y0 = float(y[0])
+    dx = float(x[1] - x[0]) if len(x) > 1 else 1.0
+    dy = float(y[1] - y[0]) if len(y) > 1 else 1.0
+    samples = max(int(samples), 1)
+    pixel_width = 2.0 * sphere_radius / pixels
+    coverage = np.zeros((pixels, pixels), dtype=float)
+    value_sum = np.zeros((pixels, pixels), dtype=float)
+    value_count = np.zeros((pixels, pixels), dtype=float)
+    offsets = (np.arange(samples, dtype=float) + 0.5) / samples - 0.5
+    finite_mask = np.isfinite(z)
+
+    for oy in offsets:
+        yy = sphere_radius - (np.arange(pixels, dtype=float) + 0.5 + oy) * pixel_width
+        for ox in offsets:
+            xx = -sphere_radius + (np.arange(pixels, dtype=float) + 0.5 + ox) * pixel_width
+            grid_x, grid_y = np.meshgrid(xx, yy)
+            circle = grid_x * grid_x + grid_y * grid_y <= sphere_radius * sphere_radius
+            fx = (grid_x - x0) / dx
+            fy = (grid_y - y0) / dy
+            ix = np.floor(fx).astype(int)
+            iy = np.floor(fy).astype(int)
+            inside = circle & (ix >= 0) & (iy >= 0) & (ix + 1 < len(x)) & (iy + 1 < len(y))
+            if not np.any(inside):
+                continue
+            rows, cols = np.where(inside)
+            ixv = ix[rows, cols]
+            iyv = iy[rows, cols]
+            tx = fx[rows, cols] - ixv
+            ty = fy[rows, cols] - iyv
+            weights = np.stack(
+                [
+                    (1.0 - tx) * (1.0 - ty),
+                    tx * (1.0 - ty),
+                    (1.0 - tx) * ty,
+                    tx * ty,
+                ],
+                axis=1,
+            )
+            finite_vals = np.stack(
+                [
+                    finite_mask[iyv, ixv],
+                    finite_mask[iyv, ixv + 1],
+                    finite_mask[iyv + 1, ixv],
+                    finite_mask[iyv + 1, ixv + 1],
+                ],
+                axis=1,
+            )
+            vals = np.stack(
+                [
+                    z[iyv, ixv],
+                    z[iyv, ixv + 1],
+                    z[iyv + 1, ixv],
+                    z[iyv + 1, ixv + 1],
+                ],
+                axis=1,
+            )
+            finite_weights = np.where(finite_vals, weights, 0.0)
+            weight_sum = finite_weights.sum(axis=1)
+            finite = weight_sum > 0.0
+            coverage[rows, cols] += weight_sum
+            sampled = np.sum(np.where(finite_vals, vals, 0.0) * finite_weights, axis=1) / np.where(
+                finite,
+                weight_sum,
+                1.0,
+            )
+            value_sum[rows[finite], cols[finite]] += sampled[finite]
+            value_count[rows[finite], cols[finite]] += 1.0
+
+    edge_values = np.full((pixels, pixels), np.nan, dtype=float)
+    finite_values = value_count > 0.0
+    edge_values[finite_values] = value_sum[finite_values] / value_count[finite_values]
+    return coverage / float(samples * samples), edge_values
 
 
 def colorbar_svg(

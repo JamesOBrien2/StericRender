@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 
 from stericrender.maps import StericMapResult
@@ -64,6 +66,38 @@ def test_steric_map_rgba_antialiases_circular_edge():
     alpha = image[:, :, 3]
     assert np.any(alpha == 255)
     assert np.any((alpha > 0) & (alpha < 255))
+
+
+def test_steric_map_rgba_antialiases_internal_valid_edge():
+    x = np.linspace(-1.0, 1.0, 5)
+    y = np.linspace(-1.0, 1.0, 5)
+    xx, yy = np.meshgrid(x, y)
+    z = 1.0 - xx * xx - yy * yy
+    z[xx > 0.0] = np.nan
+
+    image = steric_map_rgba(
+        x=x,
+        y=y,
+        z=z,
+        sphere_radius=1.0,
+        vmin=-1.0,
+        vmax=1.0,
+        pixels=64,
+    )
+
+    alpha = image[:, :, 3]
+    coords = -1.0 + (np.arange(64, dtype=float) + 0.5) / 64 * 2.0
+    grid_x, grid_y = np.meshgrid(coords, coords)
+    interior_boundary = (np.abs(grid_x) < 0.08) & (grid_y * grid_y < 0.5)
+    assert np.any((alpha[interior_boundary] > 0) & (alpha[interior_boundary] < 255))
+
+
+def test_readme_steric_map_example_has_no_quadrant_labels():
+    svg = Path("examples/images/sambvca/complex_04_meduphos_map.svg").read_text()
+    assert ">NE</text>" not in svg
+    assert ">NW</text>" not in svg
+    assert ">SW</text>" not in svg
+    assert ">SE</text>" not in svg
 
 
 def test_contour_segments_find_crossing():

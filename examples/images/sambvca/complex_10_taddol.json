@@ -30,6 +30,7 @@
     "map_palette": "sambvca",
     "measured_dihedral_degrees": null,
     "mesh": 0.05,
+    "overlay_all_atoms": false,
     "radii": "scaled-bondi",
     "render_config": "flat",
     "roll_degrees": 0.0,
@@ -70,6 +71,7 @@
       35,
       36
     ],
+    "show_quadrants": false,
     "sphere_radius": 3.5,
     "visual_mesh": 0.05
   },
