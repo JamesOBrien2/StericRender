@@ -63,6 +63,7 @@ def test_steric_map_edge_svg_traces_finite_boundary():
     assert 'class="stericrender-map-edge-cleanup"' in svg
     assert 'stroke-width="3.00"' in svg
     assert 'stroke="#111827"' in svg
+    assert 'stroke="#ffffff"' not in svg
     assert "Q " in svg
     assert "<path " in svg
 
