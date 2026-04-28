@@ -2,11 +2,12 @@
   <img src="StericRender_colour.svg" alt="StericRender" width="720">
 </p>
 
-# StericRender
-
 Steric maps and buried-volume figures, oriented with `xyzrender`.
 
-![StericRender overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg)
+| Steric map | Overlay |
+|---|---|
+| ![example map](examples/images/sambvca/complex_04_meduphos_map.svg) | ![example overlay](examples/images/sambvca/complex_04_meduphos_overlay.svg) |
+
 
 ```bash
 python -m pip install -e .
@@ -23,9 +24,6 @@ stericrender map examples/simple.xyz \
   --output-prefix results/simple
 ```
 
-| Steric map | Overlay |
-|---|---|
-| ![simple map](examples/images/simple_map.svg) | ![simple overlay](examples/images/simple_overlay.svg) |
 
 ## Gallery
 
