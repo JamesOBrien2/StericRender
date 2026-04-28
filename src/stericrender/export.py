@@ -99,7 +99,7 @@ def write_map_svg(
             z=steric_map.z,
             sx=sx,
             sy=sy,
-            stroke_width=max(2.0, plot_size / (2.0 * sphere_radius) * 0.04),
+            stroke_width=max(4.0, plot_size / (2.0 * sphere_radius) * 0.09),
         ),
     ]
     if show_contours and finite.size:

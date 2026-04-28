@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+from collections import defaultdict, deque
 from io import BytesIO
 
 import numpy as np
@@ -97,23 +98,80 @@ def steric_map_edge_svg(
     sx,
     sy,
     stroke_width: float,
+    outline_width: float = 1.15,
     stroke: str = "#ffffff",
+    outline: str = "#111827",
 ) -> str:
     """Return vector strokes that clean up finite/no-data map edges."""
     finite = np.isfinite(z).astype(float)
     segments = contour_segments(x, y, finite, np.array([0.5]))
     if not segments:
         return ""
-    commands = " ".join(
-        f"M {sx(x1):.2f} {sy(y1):.2f} L {sx(x2):.2f} {sy(y2):.2f}"
-        for x1, y1, x2, y2 in segments
-    )
+    commands = " ".join(_svg_smooth_path(points, sx, sy) for points in _segments_to_polylines(segments))
     return (
-        f'<g class="stericrender-map-edge-cleanup" fill="none" stroke="{stroke}" '
-        f'stroke-width="{stroke_width:.2f}" stroke-linecap="round" stroke-linejoin="round">\n'
-        f'<path d="{commands}"/>\n'
+        f'<g class="stericrender-map-edge-cleanup" fill="none" stroke-linecap="round" stroke-linejoin="round">\n'
+        f'<path d="{commands}" stroke="{stroke}" stroke-width="{stroke_width:.2f}"/>\n'
+        f'<path d="{commands}" stroke="{outline}" stroke-width="{outline_width:.2f}" opacity="0.82"/>\n'
         "</g>\n"
     )
+
+
+def _segments_to_polylines(
+    segments: list[tuple[float, float, float, float]],
+    *,
+    precision: int = 6,
+) -> list[list[tuple[float, float]]]:
+    """Connect unordered contour segments into drawable polylines."""
+    endpoints: list[tuple[tuple[float, float], tuple[float, float]]] = []
+    by_key: dict[tuple[float, float], list[int]] = defaultdict(list)
+    for i, (x1, y1, x2, y2) in enumerate(segments):
+        a = (round(float(x1), precision), round(float(y1), precision))
+        b = (round(float(x2), precision), round(float(y2), precision))
+        endpoints.append((a, b))
+        by_key[a].append(i)
+        by_key[b].append(i)
+
+    used: set[int] = set()
+    polylines: list[list[tuple[float, float]]] = []
+    for start in range(len(endpoints)):
+        if start in used:
+            continue
+        used.add(start)
+        line: deque[tuple[float, float]] = deque(endpoints[start])
+        for append_right in (True, False):
+            while True:
+                key = line[-1] if append_right else line[0]
+                next_id = next((idx for idx in by_key[key] if idx not in used), None)
+                if next_id is None:
+                    break
+                used.add(next_id)
+                a, b = endpoints[next_id]
+                other = b if a == key else a
+                if append_right:
+                    line.append(other)
+                else:
+                    line.appendleft(other)
+        polylines.append(list(line))
+    return polylines
+
+
+def _svg_smooth_path(points: list[tuple[float, float]], sx, sy) -> str:
+    """Build a lightly smoothed SVG path through a contour polyline."""
+    if len(points) < 2:
+        return ""
+    coords = [(float(sx(x)), float(sy(y))) for x, y in points]
+    if len(coords) == 2:
+        (x1, y1), (x2, y2) = coords
+        return f"M {x1:.2f} {y1:.2f} L {x2:.2f} {y2:.2f}"
+    commands = [f"M {coords[0][0]:.2f} {coords[0][1]:.2f}"]
+    for i in range(1, len(coords) - 1):
+        x, y = coords[i]
+        nx, ny = coords[i + 1]
+        mx = (x + nx) / 2.0
+        my = (y + ny) / 2.0
+        commands.append(f"Q {x:.2f} {y:.2f} {mx:.2f} {my:.2f}")
+    commands.append(f"L {coords[-1][0]:.2f} {coords[-1][1]:.2f}")
+    return " ".join(commands)
 
 
 def steric_map_png_data_uri(
