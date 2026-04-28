@@ -2,6 +2,8 @@
   <img src="StericRender_colour.svg" alt="StericRender" width="720">
 </p>
 
+___
+
 Steric maps and buried-volume figures, oriented with `xyzrender`.
 
 | Overlay | Steric map |
