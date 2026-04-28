@@ -120,7 +120,7 @@ def steric_overlay_layer(
             z=steric_map.z,
             sx=px,
             sy=py,
-            stroke_width=max(4.0, scale * 0.09),
+            stroke_width=max(10.0, scale * 0.18),
         ),
     ]
     if show_contours and finite.size:
