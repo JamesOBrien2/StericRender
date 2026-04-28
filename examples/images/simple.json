@@ -1,0 +1,58 @@
+{
+  "buried_volume": 43.06000000000001,
+  "buried_voxels": 43060,
+  "free_volume": 136.31000000000003,
+  "hemisphere_percent": {
+    "east": 24.19692966173869,
+    "north": 22.5645841067412,
+    "south": 25.51034357058234,
+    "west": 23.80729973571494
+  },
+  "metadata": {
+    "axis": [
+      2
+    ],
+    "center": 1,
+    "color_range": [
+      -3.0,
+      3.0
+    ],
+    "dihedral": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "dihedral_target_degrees": 0.0,
+    "exclude": "1",
+    "flip_z": false,
+    "frame": 1,
+    "frame_title": "simple stericrender smoke structure",
+    "include": null,
+    "include_hydrogens": false,
+    "input": "examples/simple.xyz",
+    "map_palette": "sambvca",
+    "measured_dihedral_degrees": 180.0,
+    "mesh": 0.1,
+    "radii": "scaled-bondi",
+    "render_config": "flat",
+    "roll_degrees": -180.0,
+    "selected_atoms": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "sphere_radius": 3.5
+  },
+  "percent_buried": 24.00624407648994,
+  "quadrant_percent": {
+    "NE": 22.723773681734592,
+    "NW": 22.39848282016957,
+    "SE": 25.734047300312362,
+    "SW": 25.27697607299134
+  },
+  "sphere_volume": 179.37000000000003,
+  "total_voxels": 179370,
+  "voxel_volume": 0.0010000000000000002
+}

@@ -1,0 +1,72 @@
+{
+  "buried_volume": 119.69000000000003,
+  "buried_voxels": 119690,
+  "free_volume": 59.68000000000001,
+  "hemisphere_percent": {
+    "east": 66.27759701264385,
+    "north": 66.54619701701134,
+    "south": 66.91766153285337,
+    "west": 67.19789483277135
+  },
+  "metadata": {
+    "axis": [
+      22,
+      23
+    ],
+    "center": 1,
+    "color_range": [
+      -3.0,
+      3.0
+    ],
+    "dihedral": null,
+    "dihedral_target_degrees": 0.0,
+    "exclude": "1,22,23",
+    "flip_z": false,
+    "frame": 1,
+    "frame_title": "complex 17:     SCF Done: -1818.49010885 A.U.",
+    "include": null,
+    "include_hydrogens": false,
+    "input": "examples/sambvca/structures/complex_17.xyz",
+    "map_palette": "sambvca",
+    "measured_dihedral_degrees": null,
+    "mesh": 0.1,
+    "radii": "scaled-bondi",
+    "render_config": "flat",
+    "roll_degrees": 0.0,
+    "selected_atoms": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      24,
+      25,
+      30,
+      31
+    ],
+    "sphere_radius": 3.5
+  },
+  "percent_buried": 66.72799241790712,
+  "quadrant_percent": {
+    "NE": 52.499679254159005,
+    "NW": 81.20258813029898,
+    "SE": 80.65372601517181,
+    "SW": 52.5882133879527
+  },
+  "sphere_volume": 179.37000000000003,
+  "total_voxels": 179370,
+  "voxel_volume": 0.0010000000000000002
+}
