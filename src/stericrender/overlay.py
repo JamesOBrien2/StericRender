@@ -9,7 +9,7 @@ import numpy as np
 
 from stericrender.maps import StericMapResult
 from stericrender.export import vbur_label_svg
-from stericrender.visual import colorbar_svg, contour_segments, steric_map_image_svg
+from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -113,6 +113,14 @@ def steric_overlay_layer(
             opacity=1.0,
             pixels=1000,
             bands=34,
+        ),
+        steric_map_edge_svg(
+            x=steric_map.x,
+            y=steric_map.y,
+            z=steric_map.z,
+            sx=px,
+            sy=py,
+            stroke_width=max(4.0, scale * 0.09),
         ),
     ]
     if show_contours and finite.size:

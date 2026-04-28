@@ -6,7 +6,7 @@ Steric maps and buried-volume figures, oriented with `xyzrender`.
 
 | Overlay | Steric map |
 |---|---|
-| <img src="examples/images/sambvca/complex_04_meduphos_overlay.svg" alt="example overlay" width="300"> | <img src="examples/images/sambvca/complex_04_meduphos_map.svg" alt="example map" width="300"> |
+| <img src="examples/images/sambvca/complex_04_meduphos_overlay.svg" alt="example overlay" width="224"> | <img src="examples/images/sambvca/complex_04_meduphos_map.svg" alt="example map" width="300"> |
 
 ## Gallery
 
