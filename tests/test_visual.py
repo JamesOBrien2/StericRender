@@ -1,9 +1,11 @@
+from pathlib import Path
+
 import numpy as np
 
 from stericrender.maps import StericMapResult
 from stericrender.export import write_map_svg
 from stericrender.overlay import _clip_molecule_to_disk, steric_overlay_layer
-from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_image_svg, steric_map_rgba
+from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg, steric_map_rgba
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -44,6 +46,28 @@ def test_steric_map_image_svg_embeds_png_data_uri():
     assert "data:image/png;base64," in svg
 
 
+def test_steric_map_edge_svg_traces_finite_boundary():
+    x = np.array([-1.0, 0.0, 1.0])
+    y = np.array([-1.0, 0.0, 1.0])
+    z = np.array([[1.0, 1.0, np.nan], [1.0, 1.0, np.nan], [np.nan, np.nan, np.nan]])
+
+    svg = steric_map_edge_svg(
+        x=x,
+        y=y,
+        z=z,
+        sx=lambda value: 10.0 + value,
+        sy=lambda value: 20.0 - value,
+        stroke_width=3.0,
+    )
+
+    assert 'class="stericrender-map-edge-cleanup"' in svg
+    assert 'stroke-width="3.00"' in svg
+    assert 'stroke="#111827"' in svg
+    assert 'stroke="#ffffff"' not in svg
+    assert "Q " in svg
+    assert "<path " in svg
+
+
 def test_steric_map_rgba_antialiases_circular_edge():
     x = np.linspace(-1.0, 1.0, 5)
     y = np.linspace(-1.0, 1.0, 5)
@@ -64,6 +88,38 @@ def test_steric_map_rgba_antialiases_circular_edge():
     alpha = image[:, :, 3]
     assert np.any(alpha == 255)
     assert np.any((alpha > 0) & (alpha < 255))
+
+
+def test_steric_map_rgba_antialiases_internal_valid_edge():
+    x = np.linspace(-1.0, 1.0, 5)
+    y = np.linspace(-1.0, 1.0, 5)
+    xx, yy = np.meshgrid(x, y)
+    z = 1.0 - xx * xx - yy * yy
+    z[xx > 0.0] = np.nan
+
+    image = steric_map_rgba(
+        x=x,
+        y=y,
+        z=z,
+        sphere_radius=1.0,
+        vmin=-1.0,
+        vmax=1.0,
+        pixels=64,
+    )
+
+    alpha = image[:, :, 3]
+    coords = -1.0 + (np.arange(64, dtype=float) + 0.5) / 64 * 2.0
+    grid_x, grid_y = np.meshgrid(coords, coords)
+    interior_boundary = (np.abs(grid_x) < 0.08) & (grid_y * grid_y < 0.5)
+    assert np.any((alpha[interior_boundary] > 0) & (alpha[interior_boundary] < 255))
+
+
+def test_readme_steric_map_example_has_no_quadrant_labels():
+    svg = Path("examples/images/sambvca/complex_04_meduphos_map.svg").read_text()
+    assert ">NE</text>" not in svg
+    assert ">NW</text>" not in svg
+    assert ">SW</text>" not in svg
+    assert ">SE</text>" not in svg
 
 
 def test_contour_segments_find_crossing():

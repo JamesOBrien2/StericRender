@@ -34,6 +34,7 @@
     "map_palette": "sambvca",
     "measured_dihedral_degrees": 180.0,
     "mesh": 0.05,
+    "overlay_all_atoms": false,
     "radii": "scaled-bondi",
     "render_config": "flat",
     "roll_degrees": -180.0,
