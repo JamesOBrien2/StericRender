@@ -37,6 +37,9 @@ def write_xyzrender_overlay_svg(
     palette: str = "sambvca",
     show_contours: bool = True,
     show_colorbar: bool = True,
+    show_vbur_label: bool = True,
+    stereo: bool | list[str] = False,
+    stereo_style: str = "atom",
 ) -> None:
     """Render an oriented molecule with xyzrender and composite the steric map.
 
@@ -57,7 +60,7 @@ def write_xyzrender_overlay_svg(
         raise ValueError("--zoom must be greater than 0")
     cfg.fixed_span = 2.0 * sphere_radius * zoom
     mol = load(oriented_xyz)
-    molecule_svg = str(render(mol, config=cfg, orient=False))
+    molecule_svg = str(render(mol, config=cfg, orient=False, stereo=stereo, stereo_style=stereo_style))
     width, height = _svg_size(molecule_svg, default=canvas_size)
     scale = (canvas_size - 2.0 * cfg.padding) / cfg.fixed_span
     r = sphere_radius * scale
@@ -174,6 +177,8 @@ def steric_overlay_layer(
             vbur_label_svg(cx, footer_layout.label_y, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
+    if show_vbur_label:
+        lines.append(vbur_label_svg(cx, height + 40.0, volume.percent_buried, value_size=25, label_size=21))
     if show_colorbar:
         assert footer_layout.colorbar_y is not None
         bar_width = min(width - 80.0, 640.0)
