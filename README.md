@@ -38,7 +38,15 @@ Steric maps and buried-volume figures with molecular visualisations rendered wit
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![complex 16](examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg) | ![complex 17](examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg) | ![complex 18](examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg) |
 
-## CLI
+Radius and zoom examples:
+
+`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
+
+| `--radius 2`                                                         | `--zoom 1.6`                                                     |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
+
+## CLI Arguments
 
 ```bash
 stericrender complex.xyz \
@@ -53,26 +61,8 @@ stericrender complex.xyz \
   --output-prefix results/complex
 ```
 
-Radius and zoom examples:
-
-`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
-
-| `--radius 2`                                                         | `--zoom 1.6`                                                     |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
-
-Outputs:
-
-```text
-results/complex.json
-results/complex_grid.csv
-results/complex_grid.npz
-results/complex_map.svg
-results/complex_overlay.svg
-results/complex_oriented.xyz
-```
-
-Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
+#### Available flags
+`--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`/`--radius`, `--mesh`, `--visual-mesh`,
 `--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
 `--stereo`, `--stereo-style`, `--no-contours`, `--no-colorbar`,
