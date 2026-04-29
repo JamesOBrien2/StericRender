@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/logo.svg" alt="StericRender" width="520"></p>
+<p align="center"><img src="docs/logo.svg" alt="StericRender" width="720"></p>
 
 # StericRender: Topographic Steric Mapping with Molecular Visualisation
 
