@@ -1,10 +1,17 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from stericrender.maps import StericMapResult
 from stericrender.export import write_map_svg
-from stericrender.overlay import _clip_molecule_to_disk, _clip_molecule_to_viewport, steric_overlay_layer
+from stericrender.overlay import (
+    _clip_molecule_to_disk,
+    _clip_molecule_to_viewport,
+    _molecule_content_bottom,
+    _overlay_footer_layout,
+    steric_overlay_layer,
+)
 from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg, steric_map_rgba
 from stericrender.volume import BuriedVolumeResult
 
@@ -177,6 +184,46 @@ def test_overlay_layer_includes_full_opacity_colorbar():
     assert 'class="stericrender-colorbar"' in svg
     assert 'class="stericrender-vbur-label"' in svg
     assert ">50.00</tspan>" in svg
+
+
+def test_overlay_footer_follows_zoomed_map_instead_of_viewport_bottom():
+    layout = _overlay_footer_layout(
+        height=800.0,
+        sphere_radius=3.5,
+        scale=67.857142857,
+        show_colorbar=True,
+        content_bottom=610.0,
+    )
+
+    assert layout.label_y == pytest.approx(677.5)
+    assert layout.colorbar_y == pytest.approx(713.5)
+    assert layout.total_height == pytest.approx(769.5)
+
+
+def test_overlay_footer_respects_molecule_content_below_zoomed_map():
+    layout = _overlay_footer_layout(
+        height=800.0,
+        sphere_radius=3.5,
+        scale=67.857142857,
+        show_colorbar=True,
+        content_bottom=720.0,
+    )
+
+    assert layout.label_y == 760.0
+    assert layout.colorbar_y == 796.0
+    assert layout.total_height == 852.0
+
+
+def test_molecule_content_bottom_uses_wrapped_primitives():
+    svg = """<svg viewBox="0 0 800 800" width="800" height="800">
+<rect width="100%" height="100%" fill="#fff"/>
+<g id="stericrender-molecule">
+  <line x1="100" y1="500" x2="200" y2="610" stroke-width="12"/>
+  <circle cx="400" cy="650" r="30" stroke-width="8"/>
+</g>
+</svg>"""
+
+    assert _molecule_content_bottom(svg) == 684.0
 
 
 def test_clip_molecule_to_disk_wraps_structure_but_keeps_background_unclipped():
