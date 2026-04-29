@@ -4,14 +4,14 @@
 
 StericRender computes topographic steric maps and buried volume (%V*Bur*) for any molecular structure, producing publication-quality SVG figures from the command line. It implements the SambVca methodology and uses [`xyzrender`](https://github.com/aligfellow/xyzrender) for oriented molecular overlays.
 
-[![PyPI](https://img.shields.io/badge/pypi-pending-lightgrey)](https://pypi.org/project/stericrender/)
-[![Downloads](https://img.shields.io/badge/downloads-pending-lightgrey)](https://pepy.tech/projects/stericrender)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/JamesOBrien2/StericRender/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/stericrender)](https://pypi.org/project/stericrender/)
+![Downloads](https://img.shields.io/badge/downloads-pending-lightgrey)
+[![License](https://img.shields.io/github/license/JamesOBrien2/StericRender)](https://github.com/JamesOBrien2/StericRender/blob/main/LICENSE)
 [![Powered by uv](https://img.shields.io/badge/powered%20by-uv-purple)](https://docs.astral.sh/uv/)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Typing: ty](https://img.shields.io/badge/typing-ty-EFC621.svg)](https://github.com/astral-sh/ty)
 [![Build](https://img.shields.io/badge/build-pending-lightgrey)](https://github.com/JamesOBrien2/StericRender/actions)
-[![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)](https://codecov.io/gh/JamesOBrien2/StericRender)
+[![Codecov](https://codecov.io/gh/JamesOBrien2/StericRender/graph/badge.svg)](https://codecov.io/gh/JamesOBrien2/StericRender)
 
 
 ![zoomed out overlay](examples/images/controls/zoom_overlay.svg)
