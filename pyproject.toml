@@ -51,10 +51,11 @@ ignore = ["E501"]
 [tool.ruff.lint.isort]
 known-first-party = ["stericrender"]
 
-[tool.ty]
+[tool.ty.environment]
 python = ".venv"
 
 [dependency-groups]
 dev = [
     "ruff>=0.15.12",
+    "ty>=0.0.33",
 ]

@@ -294,16 +294,18 @@ def _molecule_content_bottom(svg: str) -> float | None:
     bottoms: list[float] = []
     for tag in re.findall(r"(?s)<(circle|ellipse|line|rect|path)\b([^>]*)>", body):
         name, attrs = tag
-        stroke_pad = _float_attr(attrs, "stroke-width", default=0.0) / 2.0
+        stroke_width = _float_attr(attrs, "stroke-width", default=0.0)
+        stroke_pad = (stroke_width if stroke_width is not None else 0.0) / 2.0
+
         if name == "circle":
             cy = _float_attr(attrs, "cy")
             r = _float_attr(attrs, "r", default=0.0)
-            if cy is not None:
+            if cy is not None and r is not None:
                 bottoms.append(cy + r + stroke_pad)
         elif name == "ellipse":
             cy = _float_attr(attrs, "cy")
             ry = _float_attr(attrs, "ry", default=0.0)
-            if cy is not None:
+            if cy is not None and ry is not None:
                 bottoms.append(cy + ry + stroke_pad)
         elif name == "line":
             ys = [_float_attr(attrs, "y1"), _float_attr(attrs, "y2")]

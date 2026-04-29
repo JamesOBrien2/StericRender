@@ -1,4 +1,4 @@
- version = 1
+version = 1
 revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
@@ -1450,6 +1450,7 @@ validation = [
 [package.dev-dependencies]
 dev = [
     { name = "ruff" },
+    { name = "ty" },
 ]
 
 [package.metadata]
@@ -1468,7 +1469,10 @@ requires-dist = [
 provides-extras = ["test", "validation", "dev"]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.15.12" }]
+dev = [
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "ty", specifier = ">=0.0.33" },
+]
 
 [[package]]
 name = "termcolor"
