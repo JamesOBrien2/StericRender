@@ -4,7 +4,7 @@
 
 ---
 
-> Steric maps and buried-volume figures, oriented with `xyzrender`.
+Steric maps and buried-volume figures with molecular visualisations rendered with [`xyzrender`](https://github.com/aligfellow/xyzrender).
 
 ### Monocoordinated Ligands
 
