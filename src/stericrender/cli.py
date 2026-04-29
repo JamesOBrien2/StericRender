@@ -48,11 +48,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--include-hydrogens", action="store_true", help="Include H atoms in steric analysis")
     parser.add_argument(
         "--sphere-radius",
-        "--radius",
-        dest="sphere_radius",
+        dest="base_sphere_radius",
         type=float,
         default=3.5,
-        help="Steric-map sphere radius in Angstrom",
+        help="Base steric-map sphere radius in Angstrom",
+    )
+    parser.add_argument(
+        "--radius",
+        dest="radius_multiplier",
+        type=float,
+        default=1.0,
+        help="Steric-map radius multiplier; --radius 2 doubles the base sphere radius",
     )
     parser.add_argument("--mesh", type=float, default=0.05, help="Voxel/map mesh spacing in Angstrom")
     parser.add_argument(
@@ -121,10 +127,13 @@ def run_map(args: argparse.Namespace) -> None:
 
 
 def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path) -> dict:
-    if args.sphere_radius <= 0.0:
-        raise ValueError("--radius/--sphere-radius must be greater than 0")
+    if args.base_sphere_radius <= 0.0:
+        raise ValueError("--sphere-radius must be greater than 0")
+    if args.radius_multiplier <= 0.0:
+        raise ValueError("--radius must be greater than 0")
     if args.zoom <= 0.0:
         raise ValueError("--zoom must be greater than 0")
+    sphere_radius = args.base_sphere_radius * args.radius_multiplier
 
     symbols, positions = atoms_to_arrays(frame.atoms)
     n_atoms = len(frame.atoms)
@@ -154,13 +163,13 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
     volume = compute_buried_volume(
         selected_positions,
         selected_radii,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         mesh=args.mesh,
     )
     steric_map = compute_steric_map(
         selected_positions,
         selected_radii,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         mesh=args.mesh,
     )
 
@@ -181,7 +190,9 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "selected_atoms": [idx + 1 for idx in selected],
         "radii": args.radii,
         "include_hydrogens": args.include_hydrogens,
-        "sphere_radius": args.sphere_radius,
+        "sphere_radius": sphere_radius,
+        "base_sphere_radius": args.base_sphere_radius,
+        "radius_multiplier": args.radius_multiplier,
         "mesh": args.mesh,
         "visual_mesh": args.visual_mesh,
         "zoom": args.zoom,
@@ -200,14 +211,14 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         visual_map = compute_steric_map(
             selected_positions,
             selected_radii,
-            sphere_radius=args.sphere_radius,
+            sphere_radius=sphere_radius,
             mesh=args.visual_mesh,
         )
     write_map_svg(
         f"{prefix}_map.svg",
         visual_map,
         volume,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         color_range=color_range,
         palette=args.map_palette,
         show_colorbar=not args.no_colorbar,
@@ -229,7 +240,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 output_svg=f"{prefix}_overlay.svg",
                 steric_map=visual_map,
                 volume=volume,
-                sphere_radius=args.sphere_radius,
+                sphere_radius=sphere_radius,
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
                 zoom=args.zoom,

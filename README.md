@@ -68,7 +68,9 @@ stericrender complex.xyz \
 
 Radius and zoom examples:
 
-| `--radius 4.5` | `--zoom 1.6` | `--radius 4.5 --zoom 1.6` |
+`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
+
+| `--radius 2` | `--zoom 1.6` | `--radius 2 --zoom 1.6` |
 |---|---|---|
 | ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) | ![larger steric radius and zoomed out overlay](examples/images/controls/radius_zoom_overlay.svg) |
 
