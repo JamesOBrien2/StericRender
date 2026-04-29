@@ -38,7 +38,7 @@ Steric maps and buried-volume figures with molecular visualisations rendered wit
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![complex 16](examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg) | ![complex 17](examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg) | ![complex 18](examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg) |
 
-Radius and zoom examples:
+### Radius/Zoom
 
 `--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
 
