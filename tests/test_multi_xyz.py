@@ -53,6 +53,7 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
         overlay_xyz = Path(kwargs["oriented_xyz"])
         captured["overlay_xyz_name"] = overlay_xyz.name
         captured["overlay_xyz_text"] = overlay_xyz.read_text()
+        captured["include_hydrogens"] = kwargs["include_hydrogens"]
 
     monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
 
@@ -75,6 +76,7 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
     assert "Pd" not in captured["overlay_xyz_text"]
     assert captured["overlay_xyz_text"].count("\nP  ") == 1
     assert captured["overlay_xyz_text"].count("\nC  ") == 3
+    assert captured["include_hydrogens"] is False
     assert not (tmp_path / "simple_overlay_atoms.xyz").exists()
 
 
@@ -199,3 +201,98 @@ def test_cli_accepts_legacy_map_subcommand(tmp_path):
     )
 
     assert output_prefix.with_suffix(".json").is_file()
+
+
+def test_cli_include_hydrogens_passes_hydrogens_to_overlay(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    input_xyz = tmp_path / "with_h.xyz"
+    input_xyz.write_text(
+        "\n".join(
+            [
+                "6",
+                "hydrogen overlay fixture",
+                "Pd 0.0 0.0 0.0",
+                "P 0.0 0.0 2.2",
+                "C 1.5 0.0 2.9",
+                "H 2.1 0.0 3.4",
+                "H 1.2 0.9 3.2",
+                "H 1.2 -0.9 3.2",
+                "",
+            ]
+        )
+    )
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        overlay_xyz = Path(kwargs["oriented_xyz"])
+        captured["overlay_xyz_text"] = overlay_xyz.read_text()
+        captured["include_hydrogens"] = kwargs["include_hydrogens"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            str(input_xyz),
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--include-hydrogens",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    assert captured["include_hydrogens"] is True
+    assert captured["overlay_xyz_text"].splitlines()[0] == "5"
+    assert captured["overlay_xyz_text"].count("\nH  ") == 3
+
+
+def test_cli_keeps_hidden_hydrogens_for_overlay_bond_order_context(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    input_xyz = tmp_path / "with_h.xyz"
+    input_xyz.write_text(
+        "\n".join(
+            [
+                "6",
+                "hidden hydrogen graph fixture",
+                "Pd 0.0 0.0 0.0",
+                "P 0.0 0.0 2.2",
+                "C 1.5 0.0 2.9",
+                "H 2.1 0.0 3.4",
+                "H 1.2 0.9 3.2",
+                "H 1.2 -0.9 3.2",
+                "",
+            ]
+        )
+    )
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        overlay_xyz = Path(kwargs["oriented_xyz"])
+        captured["overlay_xyz_text"] = overlay_xyz.read_text()
+        captured["include_hydrogens"] = kwargs["include_hydrogens"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            str(input_xyz),
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured["include_hydrogens"] is False
+    assert captured["overlay_xyz_text"].splitlines()[0] == "5"
+    assert captured["overlay_xyz_text"].count("\nH  ") == 3
+    assert metadata["selected_atoms"] == [2, 3]
