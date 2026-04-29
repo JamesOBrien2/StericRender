@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -21,73 +22,90 @@ from stericrender.volume import compute_buried_volume
 
 def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
-    args = parser.parse_args(argv)
-    if args.command == "map":
-        run_map(args)
-        return
-    parser.error("No command provided")
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    if raw_argv and raw_argv[0] == "map":
+        raw_argv = raw_argv[1:]
+    args = parser.parse_args(raw_argv)
+    run_map(args)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="stericrender")
-    sub = parser.add_subparsers(dest="command")
-    map_p = sub.add_parser("map", help="Compute buried volume and a topographic steric map")
-    map_p.add_argument("input", help="Input structure supported by xyzrender.load(), or plain XYZ fallback")
-    map_p.add_argument("--center", required=True, help="1-based center atom index, usually the metal")
-    map_p.add_argument("--axis", required=True, help="1-based atom indices/ranges whose centroid defines +z")
-    map_p.add_argument("--dihedral", help="Four 1-based atom indices used for deterministic z-axis roll")
-    map_p.add_argument("--dihedral-target", type=float, default=0.0, help="Target roll angle in degrees")
-    map_p.add_argument("--flip-z", action="store_true", help="Reverse the center-to-axis vector")
-    map_p.add_argument("--include", help="Atoms included in steric analysis; default is all atoms")
-    map_p.add_argument("--exclude", help="Atoms excluded from steric analysis")
-    map_p.add_argument(
+    parser.add_argument("input", help="Input structure supported by xyzrender.load(), or plain XYZ fallback")
+    parser.add_argument("--center", required=True, help="1-based center atom index, usually the metal")
+    parser.add_argument("--axis", required=True, help="1-based atom indices/ranges whose centroid defines +z")
+    parser.add_argument("--dihedral", help="Four 1-based atom indices used for deterministic z-axis roll")
+    parser.add_argument("--dihedral-target", type=float, default=0.0, help="Target roll angle in degrees")
+    parser.add_argument("--flip-z", action="store_true", help="Reverse the center-to-axis vector")
+    parser.add_argument("--include", help="Atoms included in steric analysis; default is all atoms")
+    parser.add_argument("--exclude", help="Atoms excluded from steric analysis")
+    parser.add_argument(
         "--radii",
         choices=["scaled-bondi", "bondi", "csd"],
         default="scaled-bondi",
         help="Atomic radii set",
     )
-    map_p.add_argument("--include-hydrogens", action="store_true", help="Include H atoms in steric analysis")
-    map_p.add_argument("--sphere-radius", type=float, default=3.5, help="Sphere radius in Angstrom")
-    map_p.add_argument("--mesh", type=float, default=0.05, help="Voxel/map mesh spacing in Angstrom")
-    map_p.add_argument(
+    parser.add_argument("--include-hydrogens", action="store_true", help="Include H atoms in steric analysis")
+    parser.add_argument(
+        "--sphere-radius",
+        dest="base_sphere_radius",
+        type=float,
+        default=3.5,
+        help="Base steric-map sphere radius in Angstrom",
+    )
+    parser.add_argument(
+        "--radius",
+        dest="radius_multiplier",
+        type=float,
+        default=1.0,
+        help="Steric-map radius multiplier; --radius 2 doubles the base sphere radius",
+    )
+    parser.add_argument("--mesh", type=float, default=0.05, help="Voxel/map mesh spacing in Angstrom")
+    parser.add_argument(
         "--visual-mesh",
         type=float,
         default=0.05,
         help="Topographic mesh spacing used for SVG maps and overlays; numeric grids still use --mesh",
     )
-    map_p.add_argument("--output-prefix", default="stericrender", help="Output path prefix")
-    map_p.add_argument("--frames", default="all", help='1-based frame selector for multi-XYZ input, e.g. "1,4-6"')
-    map_p.add_argument("--no-overlay", action="store_true", help="Skip xyzrender molecular overlay SVG")
-    map_p.add_argument(
+    parser.add_argument("--output-prefix", default="stericrender", help="Output path prefix")
+    parser.add_argument("--frames", default="all", help='1-based frame selector for multi-XYZ input, e.g. "1,4-6"')
+    parser.add_argument("--no-overlay", action="store_true", help="Skip xyzrender molecular overlay SVG")
+    parser.add_argument(
         "--config",
         "--render-config",
         dest="render_config",
         default="default",
         help="xyzrender preset/config for overlay SVG, matching xyzrender --config",
     )
-    map_p.add_argument("--overlay-opacity", type=float, default=0.72, help="Steric-map overlay opacity")
-    map_p.add_argument("--overlay-canvas-size", type=int, default=800, help="Overlay SVG canvas size")
-    map_p.add_argument(
+    parser.add_argument("--overlay-opacity", type=float, default=0.72, help="Steric-map overlay opacity")
+    parser.add_argument("--overlay-canvas-size", type=int, default=800, help="Overlay SVG canvas size")
+    parser.add_argument(
+        "--zoom",
+        type=float,
+        default=1.0,
+        help="Overlay zoom-out multiplier; values above 1 show more molecule around the same steric radius",
+    )
+    parser.add_argument(
         "--overlay-all-atoms",
         action="store_true",
         help="Render all oriented atoms in overlay SVGs, including atoms excluded from steric analysis",
     )
-    map_p.add_argument(
+    parser.add_argument(
         "--map-palette",
         choices=sorted(PALETTES),
         default="sambvca",
         help="Steric-map colour palette",
     )
-    map_p.add_argument(
+    parser.add_argument(
         "--color-range",
         nargs=2,
         type=float,
         metavar=("MIN", "MAX"),
         help="Steric-map colour scale range in Angstrom; default is -R R",
     )
-    map_p.add_argument("--no-colorbar", action="store_true", help="Hide colorbar on map and overlay SVGs")
-    map_p.add_argument("--no-contours", action="store_true", help="Hide contour lines on map and overlay SVGs")
-    map_p.add_argument("--show-quadrants", action="store_true", help="Show NE/NW/SW/SE quadrant labels on map SVGs")
+    parser.add_argument("--no-colorbar", action="store_true", help="Hide colorbar on map and overlay SVGs")
+    parser.add_argument("--no-contours", action="store_true", help="Hide contour lines on map and overlay SVGs")
+    parser.add_argument("--show-quadrants", action="store_true", help="Show NE/NW/SW/SE quadrant labels on map SVGs")
     return parser
 
 
@@ -109,6 +127,14 @@ def run_map(args: argparse.Namespace) -> None:
 
 
 def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path) -> dict:
+    if args.base_sphere_radius <= 0.0:
+        raise ValueError("--sphere-radius must be greater than 0")
+    if args.radius_multiplier <= 0.0:
+        raise ValueError("--radius must be greater than 0")
+    if args.zoom <= 0.0:
+        raise ValueError("--zoom must be greater than 0")
+    sphere_radius = args.base_sphere_radius * args.radius_multiplier
+
     symbols, positions = atoms_to_arrays(frame.atoms)
     n_atoms = len(frame.atoms)
     center = parse_required_indices(args.center, n_atoms, count=1)[0]
@@ -137,13 +163,13 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
     volume = compute_buried_volume(
         selected_positions,
         selected_radii,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         mesh=args.mesh,
     )
     steric_map = compute_steric_map(
         selected_positions,
         selected_radii,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         mesh=args.mesh,
     )
 
@@ -164,9 +190,12 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "selected_atoms": [idx + 1 for idx in selected],
         "radii": args.radii,
         "include_hydrogens": args.include_hydrogens,
-        "sphere_radius": args.sphere_radius,
+        "sphere_radius": sphere_radius,
+        "base_sphere_radius": args.base_sphere_radius,
+        "radius_multiplier": args.radius_multiplier,
         "mesh": args.mesh,
         "visual_mesh": args.visual_mesh,
+        "zoom": args.zoom,
         "map_palette": args.map_palette,
         "color_range": args.color_range,
         "render_config": args.render_config,
@@ -182,14 +211,14 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         visual_map = compute_steric_map(
             selected_positions,
             selected_radii,
-            sphere_radius=args.sphere_radius,
+            sphere_radius=sphere_radius,
             mesh=args.visual_mesh,
         )
     write_map_svg(
         f"{prefix}_map.svg",
         visual_map,
         volume,
-        sphere_radius=args.sphere_radius,
+        sphere_radius=sphere_radius,
         color_range=color_range,
         palette=args.map_palette,
         show_colorbar=not args.no_colorbar,
@@ -211,9 +240,10 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 output_svg=f"{prefix}_overlay.svg",
                 steric_map=visual_map,
                 volume=volume,
-                sphere_radius=args.sphere_radius,
+                sphere_radius=sphere_radius,
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
+                zoom=args.zoom,
                 opacity=args.overlay_opacity,
                 color_range=color_range,
                 palette=args.map_palette,
