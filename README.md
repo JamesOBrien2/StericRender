@@ -4,7 +4,7 @@
 
 ---
 
-StericRender applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender.
+StericRender applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender).
 
 ### Monocoordinated Ligands
 
