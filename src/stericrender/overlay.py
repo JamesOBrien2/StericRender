@@ -28,6 +28,9 @@ def write_xyzrender_overlay_svg(
     palette: str = "sambvca",
     show_contours: bool = True,
     show_colorbar: bool = True,
+    show_vbur_label: bool = True,
+    stereo: bool | list[str] = False,
+    stereo_style: str = "atom",
 ) -> None:
     """Render an oriented molecule with xyzrender and composite the steric map.
 
@@ -48,7 +51,7 @@ def write_xyzrender_overlay_svg(
         raise ValueError("--zoom must be greater than 0")
     cfg.fixed_span = 2.0 * sphere_radius * zoom
     mol = load(oriented_xyz)
-    molecule_svg = str(render(mol, config=cfg, orient=False))
+    molecule_svg = str(render(mol, config=cfg, orient=False, stereo=stereo, stereo_style=stereo_style))
     width, height = _svg_size(molecule_svg, default=canvas_size)
     scale = (canvas_size - 2.0 * cfg.padding) / cfg.fixed_span
     r = sphere_radius * scale
@@ -56,7 +59,7 @@ def write_xyzrender_overlay_svg(
         molecule_svg = _clip_molecule_to_viewport(molecule_svg)
     else:
         molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r)
-    footer_height = 132 if show_colorbar else 64
+    footer_height = 132 if show_colorbar else (64 if show_vbur_label else 0)
     molecule_svg = _expand_svg_height(molecule_svg, height + footer_height)
     layer = steric_overlay_layer(
         steric_map,
@@ -70,6 +73,7 @@ def write_xyzrender_overlay_svg(
         palette=palette,
         show_contours=show_contours,
         show_colorbar=show_colorbar,
+        show_vbur_label=show_vbur_label,
     )
     Path(output_svg).write_text(_insert_before_close(molecule_svg, layer))
 
@@ -87,6 +91,7 @@ def steric_overlay_layer(
     palette: str = "sambvca",
     show_contours: bool = True,
     show_colorbar: bool = True,
+    show_vbur_label: bool = True,
 ) -> str:
     """Build an SVG group for the projected steric map."""
     finite = steric_map.z[np.isfinite(steric_map.z)]
@@ -147,9 +152,10 @@ def steric_overlay_layer(
             f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}" fill="none" stroke="#111827" stroke-width="1.6"/>\n',
             f'    <line x1="{cx-r:.2f}" y1="{cy:.2f}" x2="{cx+r:.2f}" y2="{cy:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
             f'    <line x1="{cx:.2f}" y1="{cy-r:.2f}" x2="{cx:.2f}" y2="{cy+r:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
-            vbur_label_svg(cx, height + 40.0, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
+    if show_vbur_label:
+        lines.append(vbur_label_svg(cx, height + 40.0, volume.percent_buried, value_size=25, label_size=21))
     if show_colorbar:
         bar_width = min(width - 80.0, 640.0)
         lines.append(

@@ -114,6 +114,71 @@ def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
     assert metadata["zoom"] == 1.75
 
 
+def test_cli_stereo_options_pass_to_overlay(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        captured["stereo"] = kwargs["stereo"]
+        captured["stereo_style"] = kwargs["stereo_style"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--stereo",
+            "point,ez",
+            "--stereo-style",
+            "label",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured == {"stereo": ["point", "ez"], "stereo_style": "label"}
+    assert metadata["stereo"] == "point,ez"
+    assert metadata["stereo_style"] == "label"
+
+
+def test_cli_can_hide_overlay_vbur_label(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        captured["show_vbur_label"] = kwargs["show_vbur_label"]
+        captured["show_colorbar"] = kwargs["show_colorbar"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--no-vbur-label",
+            "--no-colorbar",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured == {"show_vbur_label": False, "show_colorbar": False}
+    assert metadata["show_vbur_label"] is False
+
+
 def test_cli_accepts_legacy_map_subcommand(tmp_path):
     output_prefix = tmp_path / "legacy"
 

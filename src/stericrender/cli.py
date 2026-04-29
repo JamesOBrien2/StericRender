@@ -91,6 +91,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Render all oriented atoms in overlay SVGs, including atoms excluded from steric analysis",
     )
     parser.add_argument(
+        "--stereo",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="CLASSES",
+        help=(
+            "Add xyzrender stereochemistry labels to overlay SVGs. "
+            "Optional comma-separated class filter: point, ez, axis, plane, helix. "
+            "Omit CLASSES to show all."
+        ),
+    )
+    parser.add_argument(
+        "--stereo-style",
+        default="atom",
+        choices=["atom", "label"],
+        help="xyzrender R/S label placement for overlay SVGs",
+    )
+    parser.add_argument(
         "--map-palette",
         choices=sorted(PALETTES),
         default="sambvca",
@@ -104,6 +122,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Steric-map colour scale range in Angstrom; default is -R R",
     )
     parser.add_argument("--no-colorbar", action="store_true", help="Hide colorbar on map and overlay SVGs")
+    parser.add_argument("--no-vbur-label", action="store_true", help="Hide %%VBur label on overlay SVGs")
     parser.add_argument("--no-contours", action="store_true", help="Hide contour lines on map and overlay SVGs")
     parser.add_argument("--show-quadrants", action="store_true", help="Show NE/NW/SW/SE quadrant labels on map SVGs")
     return parser
@@ -201,6 +220,9 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "render_config": args.render_config,
         "show_quadrants": args.show_quadrants,
         "overlay_all_atoms": args.overlay_all_atoms,
+        "stereo": args.stereo,
+        "stereo_style": args.stereo_style,
+        "show_vbur_label": not args.no_vbur_label,
     }
     write_json(prefix.with_suffix(".json"), volume, metadata)
     write_grid_csv(f"{prefix}_grid.csv", steric_map)
@@ -249,6 +271,9 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 palette=args.map_palette,
                 show_contours=not args.no_contours,
                 show_colorbar=not args.no_colorbar,
+                show_vbur_label=not args.no_vbur_label,
+                stereo=_parse_stereo_arg(args.stereo),
+                stereo_style=args.stereo_style,
             )
         finally:
             if overlay_xyz != oriented_xyz:
@@ -265,6 +290,14 @@ def _frame_prefix(base: Path, frame: StructureFrame, multi: bool) -> Path:
     if not multi:
         return base
     return base.parent / f"{base.name}_frame_{frame.index:03d}"
+
+
+def _parse_stereo_arg(value: str | None) -> bool | list[str]:
+    if value is None:
+        return False
+    if value == "":
+        return True
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 if __name__ == "__main__":
