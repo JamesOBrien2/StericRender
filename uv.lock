@@ -1426,6 +1426,7 @@ name = "stericrender"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "morfeus-ml" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
@@ -1455,6 +1456,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "morfeus-ml", specifier = ">=0.8.0" },
     { name = "morfeus-ml", marker = "extra == 'validation'" },
     { name = "numpy", specifier = ">=1.22" },
     { name = "pillow", specifier = ">=10" },
