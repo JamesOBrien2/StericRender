@@ -35,7 +35,6 @@ def main() -> None:
             sys.executable,
             "-m",
             "stericrender.cli",
-            "map",
             str(structure_path),
             "--center",
             case["center"],

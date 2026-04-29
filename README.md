@@ -54,7 +54,7 @@ python scripts/run_examples.py --with-overlay --output-dir examples/images/sambv
 ## CLI
 
 ```bash
-stericrender map complex.xyz \
+stericrender complex.xyz \
   --center 1 \
   --axis 2,3 \
   --exclude 1 \
@@ -65,6 +65,14 @@ stericrender map complex.xyz \
   --color-range -3 3 \
   --output-prefix results/complex
 ```
+
+Radius and zoom examples:
+
+`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
+
+| `--radius 2` | `--zoom 1.6` |
+|---|---|
+| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
 
 Outputs:
 
@@ -78,6 +86,6 @@ results/complex_oriented.xyz
 ```
 
 Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
-`--include-hydrogens`, `--sphere-radius`, `--mesh`, `--visual-mesh`,
-`--config`, `--overlay-opacity`, `--overlay-all-atoms`,
+`--include-hydrogens`, `--sphere-radius`/`--radius`, `--mesh`, `--visual-mesh`,
+`--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
 `--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.

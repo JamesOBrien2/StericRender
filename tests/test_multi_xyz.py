@@ -21,7 +21,6 @@ def test_cli_multi_xyz_selected_frames(tmp_path):
         sys.executable,
         "-m",
         "stericrender.cli",
-        "map",
         "examples/sambvca/om6b00371_si_002.xyz",
         "--frames",
         "13,15",
@@ -59,7 +58,6 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
 
     cli.main(
         [
-            "map",
             "examples/simple.xyz",
             "--center",
             "1",
@@ -78,3 +76,61 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
     assert captured["overlay_xyz_text"].count("\nP  ") == 1
     assert captured["overlay_xyz_text"].count("\nC  ") == 3
     assert not (tmp_path / "simple_overlay_atoms.xyz").exists()
+
+
+def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        captured["sphere_radius"] = kwargs["sphere_radius"]
+        captured["zoom"] = kwargs["zoom"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--radius",
+            "2",
+            "--zoom",
+            "1.75",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured == {"sphere_radius": 7.0, "zoom": 1.75}
+    assert metadata["base_sphere_radius"] == 3.5
+    assert metadata["radius_multiplier"] == 2.0
+    assert metadata["sphere_radius"] == 7.0
+    assert metadata["zoom"] == 1.75
+
+
+def test_cli_accepts_legacy_map_subcommand(tmp_path):
+    output_prefix = tmp_path / "legacy"
+
+    cli.main(
+        [
+            "map",
+            "examples/simple.xyz",
+            "--center",
+            "1",
+            "--axis",
+            "2",
+            "--exclude",
+            "1",
+            "--no-overlay",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    assert output_prefix.with_suffix(".json").is_file()

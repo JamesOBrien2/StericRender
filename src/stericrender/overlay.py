@@ -22,6 +22,7 @@ def write_xyzrender_overlay_svg(
     sphere_radius: float,
     render_config: str = "default",
     canvas_size: int = 800,
+    zoom: float = 1.0,
     opacity: float = 0.72,
     color_range: tuple[float, float] | None = None,
     palette: str = "sambvca",
@@ -43,13 +44,18 @@ def write_xyzrender_overlay_svg(
 
     cfg = build_config(render_config, canvas_size=canvas_size, orient=False)
     cfg.fixed_center = (0.0, 0.0)
-    cfg.fixed_span = 2.0 * sphere_radius
+    if zoom <= 0.0:
+        raise ValueError("--zoom must be greater than 0")
+    cfg.fixed_span = 2.0 * sphere_radius * zoom
     mol = load(oriented_xyz)
     molecule_svg = str(render(mol, config=cfg, orient=False))
     width, height = _svg_size(molecule_svg, default=canvas_size)
     scale = (canvas_size - 2.0 * cfg.padding) / cfg.fixed_span
     r = sphere_radius * scale
-    molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r)
+    if zoom > 1.0:
+        molecule_svg = _clip_molecule_to_viewport(molecule_svg)
+    else:
+        molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r)
     footer_height = 132 if show_colorbar else 64
     molecule_svg = _expand_svg_height(molecule_svg, height + footer_height)
     layer = steric_overlay_layer(
@@ -188,6 +194,26 @@ def _clip_molecule_to_disk(svg: str, *, cx: float, cy: float, r: float) -> str:
         + defs
         + background
         + f'  <g id="stericrender-molecule" clip-path="url(#{clip_id})">\n'
+        + body
+        + "  </g>\n"
+        + close_tag
+    )
+
+
+def _clip_molecule_to_viewport(svg: str) -> str:
+    """Wrap molecule content without clipping it to the steric-map disk."""
+    match = re.match(r"(?s)(<svg\b[^>]*>\s*)(.*)(</svg>\s*)", svg)
+    if not match:
+        raise ValueError("xyzrender output did not contain a complete <svg> document")
+    open_tag, body, close_tag = match.groups()
+    background = ""
+    bg_match = re.match(r'(?s)(\s*<rect\b[^>]*width="100%"[^>]*/>\s*)(.*)', body)
+    if bg_match:
+        background, body = bg_match.groups()
+    return (
+        open_tag
+        + background
+        + '  <g id="stericrender-molecule">\n'
         + body
         + "  </g>\n"
         + close_tag
