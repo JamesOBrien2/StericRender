@@ -4,17 +4,33 @@
 
 ---
 
-Steric maps and buried-volume figures with molecular visualisations rendered with [`xyzrender`](https://github.com/aligfellow/xyzrender).
+## References
+
+StericRender applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender. If you use this repository, please consider citing the following works:
+
+1. Laura Falivene, Raffaele Credendino, Albert Poater, Andrea Petta, Luigi Serra, Romina Oliva, Vittorio Scarano, and Luigi Cavallo,  
+   “SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,”  
+   *Organometallics* **2016**, *35*, 2286–2293.  
+   DOI: [`10.1021/acs.organomet.6b00371`](https://doi.org/10.1021/acs.organomet.6b00371)
+
+2. Sílvia Escayola, Naeimeh Bahri-Laleh, and Albert Poater,  
+   “%VBur index and steric maps: from predictive catalysis to machine learning,”  
+   *Chemical Society Reviews* **2024**, *53*, 853–882.
+
+3. A. S. Goodfellow and B. N. Nguyen,  
+   “xyzrender,”  
+   *Journal of Chemical Theory and Computation* **2026**.  
+   DOI: [`10.1021/acs.jctc.5c02073`](https://doi.org/10.1021/acs.jctc.5c02073)
 
 ### Monocoordinated Ligands
 
-| PCy3 [ref]                                                        | NHC-Ni                                                              | NHC-Ir                                                              |
+| PCy3                                                              | NHC-Ni                                                              | NHC-Ir                                                              |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | ![complex 1](examples/images/sambvca/complex_01_pcy3_overlay.svg) | ![complex 2](examples/images/sambvca/complex_02_nhc_ni_overlay.svg) | ![complex 3](examples/images/sambvca/complex_03_nhc_ir_overlay.svg) |
 
 ### Dicoordinated Ligands
 
-| MeDuPhos                                                              | Box [ref]                                                        | Diphosphine                                                              |
+| MeDuPhos                                                              | Box                                                              | Diphosphine                                                              |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![complex 4](examples/images/sambvca/complex_04_meduphos_overlay.svg) | ![complex 5](examples/images/sambvca/complex_05_box_overlay.svg) | ![complex 6](examples/images/sambvca/complex_06_diphosphine_overlay.svg) |
 
@@ -28,7 +44,7 @@ Steric maps and buried-volume figures with molecular visualisations rendered wit
 
 ### Tetracoordinated Ligands
 
-| Salen-Mn [ref]                                                         | Chiral salen-Mn [ref]                                                         | Zr-ONNO [ref]                                                            |
+| Salen-Mn                                                               | Chiral salen-Mn                                                               | Zr-ONNO                                                                  |
 | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![complex 13](examples/images/sambvca/complex_13_salen_mn_overlay.svg) | ![complex 14](examples/images/sambvca/complex_14_chiral_salen_mn_overlay.svg) | ![complex 15](examples/images/sambvca/complex_15_zr_complex_overlay.svg) |
 
