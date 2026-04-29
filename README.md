@@ -4,23 +4,7 @@
 
 ---
 
-## References
-
-StericRender applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender. If you use this repository, please consider citing the following works:
-
-1. Laura Falivene, Raffaele Credendino, Albert Poater, Andrea Petta, Luigi Serra, Romina Oliva, Vittorio Scarano, and Luigi Cavallo,  
-   “SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,”  
-   *Organometallics* **2016**, *35*, 2286–2293.  
-   DOI: [`10.1021/acs.organomet.6b00371`](https://doi.org/10.1021/acs.organomet.6b00371)
-
-2. Sílvia Escayola, Naeimeh Bahri-Laleh, and Albert Poater,  
-   “%VBur index and steric maps: from predictive catalysis to machine learning,”  
-   *Chemical Society Reviews* **2024**, *53*, 853–882.
-
-3. A. S. Goodfellow and B. N. Nguyen,  
-   “xyzrender,”  
-   *Journal of Chemical Theory and Computation* **2026**.  
-   DOI: [`10.1021/acs.jctc.5c02073`](https://doi.org/10.1021/acs.jctc.5c02073)
+StericRender applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender.
 
 ### Monocoordinated Ligands
 
@@ -83,3 +67,21 @@ stericrender complex.xyz \
 `--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
 `--stereo`, `--stereo-style`, `--no-contours`, `--no-colorbar`,
 `--no-vbur-label`, `--show-quadrants`, `--no-overlay`.
+
+## References
+
+If you use this repository, you must cite the following works:
+
+1. Laura Falivene, Raffaele Credendino, Albert Poater, Andrea Petta, Luigi Serra, Romina Oliva, Vittorio Scarano, and Luigi Cavallo,  
+   “SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,”  
+   *Organometallics* **2016**, *35*, 2286–2293.  
+   DOI: [`10.1021/acs.organomet.6b00371`](https://doi.org/10.1021/acs.organomet.6b00371)
+
+2. Sílvia Escayola, Naeimeh Bahri-Laleh, and Albert Poater,  
+   “%VBur index and steric maps: from predictive catalysis to machine learning,”  
+   *Chemical Society Reviews* **2024**, *53*, 853–882.
+
+3. A. S. Goodfellow and B. N. Nguyen,  
+   “xyzrender,”  
+   *Journal of Chemical Theory and Computation* **2026**.  
+   DOI: [`10.1021/acs.jctc.5c02073`](https://doi.org/10.1021/acs.jctc.5c02073)
