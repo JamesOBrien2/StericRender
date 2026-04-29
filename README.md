@@ -59,7 +59,7 @@ stericrender complex.xyz \
   --axis 2,3 \
   --exclude 1 \
   --flip-z \
-  --config flat \
+  --config pmol \
   --overlay-opacity 0.72 \
   --map-palette sambvca \
   --color-range -3 3 \

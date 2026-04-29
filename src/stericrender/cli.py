@@ -150,7 +150,8 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         flip_z=args.flip_z,
     )
 
-    selected = selected_or_default(args.include, args.exclude, n_atoms)
+    graph_selected = selected_or_default(args.include, args.exclude, n_atoms)
+    selected = list(graph_selected)
     if not args.include_hydrogens:
         selected = [idx for idx in selected if symbols[idx].upper() != "H"]
     if not selected:
@@ -231,8 +232,9 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         overlay_xyz = oriented_xyz
         if not args.overlay_all_atoms:
             overlay_xyz = Path(f"{prefix}_overlay_atoms.xyz")
-            overlay_symbols = [symbols[idx] for idx in selected]
-            overlay_positions = oriented.positions[selected]
+            overlay_indices = selected if args.include_hydrogens else graph_selected
+            overlay_symbols = [symbols[idx] for idx in overlay_indices]
+            overlay_positions = oriented.positions[overlay_indices]
             write_xyz(arrays_to_atoms(overlay_symbols, overlay_positions), overlay_xyz, title="StericRender overlay atoms")
         try:
             write_xyzrender_overlay_svg(
@@ -244,6 +246,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
                 zoom=args.zoom,
+                include_hydrogens=args.include_hydrogens,
                 opacity=args.overlay_opacity,
                 color_range=color_range,
                 palette=args.map_palette,

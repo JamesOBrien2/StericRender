@@ -23,6 +23,7 @@ def write_xyzrender_overlay_svg(
     render_config: str = "default",
     canvas_size: int = 800,
     zoom: float = 1.0,
+    include_hydrogens: bool = False,
     opacity: float = 0.72,
     color_range: tuple[float, float] | None = None,
     palette: str = "sambvca",
@@ -42,7 +43,7 @@ def write_xyzrender_overlay_svg(
     except ModuleNotFoundError as exc:
         raise RuntimeError("xyzrender is required for overlay SVG output") from exc
 
-    cfg = build_config(render_config, canvas_size=canvas_size, orient=False)
+    cfg = build_config(render_config, canvas_size=canvas_size, orient=False, hy=include_hydrogens, bo=True)
     cfg.fixed_center = (0.0, 0.0)
     if zoom <= 0.0:
         raise ValueError("--zoom must be greater than 0")
