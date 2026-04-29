@@ -179,6 +179,30 @@ def test_overlay_layer_includes_full_opacity_colorbar():
     assert ">50.00</tspan>" in svg
 
 
+def test_overlay_layer_can_hide_vbur_label():
+    steric_map = StericMapResult(
+        x=np.array([-1.0, 0.0, 1.0]),
+        y=np.array([-1.0, 0.0, 1.0]),
+        z=np.array([[np.nan, 0.0, np.nan], [1.0, 2.0, 1.0], [np.nan, 0.0, np.nan]]),
+    )
+    volume = BuriedVolumeResult(50.0, 1.0, 2.0, 1.0, 0.1, 10, 20, {}, {})
+
+    svg = steric_overlay_layer(
+        steric_map,
+        volume,
+        sphere_radius=1.0,
+        width=200.0,
+        height=200.0,
+        scale=80.0,
+        opacity=0.72,
+        show_colorbar=False,
+        show_vbur_label=False,
+    )
+
+    assert 'class="stericrender-colorbar"' not in svg
+    assert 'class="stericrender-vbur-label"' not in svg
+
+
 def test_clip_molecule_to_disk_wraps_structure_but_keeps_background_unclipped():
     svg = '<svg viewBox="0 0 100 100" width="100" height="100">\n<rect width="100%" height="100%" fill="#fff"/>\n<circle cx="120" cy="50" r="10"/>\n</svg>'
 

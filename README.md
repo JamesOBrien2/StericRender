@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="StericRender_colour.svg" alt="StericRender" width="720">
+  <img src="examples/logo/stereo_render_logo_overlay.svg" alt="StericRender" width="520">
 </p>
 
 ___
@@ -88,4 +88,5 @@ results/complex_oriented.xyz
 Useful flags: `--include`, `--exclude`, `--frames`, `--radii`,
 `--include-hydrogens`, `--sphere-radius`/`--radius`, `--mesh`, `--visual-mesh`,
 `--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
-`--no-contours`, `--no-colorbar`, `--show-quadrants`, `--no-overlay`.
+`--stereo`, `--stereo-style`, `--no-contours`, `--no-colorbar`,
+`--no-vbur-label`, `--show-quadrants`, `--no-overlay`.
