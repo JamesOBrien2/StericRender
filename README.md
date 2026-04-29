@@ -1,10 +1,105 @@
-<p align="center">
-  <img src="examples/logo/logo.svg" alt="StericRender" width="520">
-</p>
+<p align="center"><img src="docs/logo.svg" alt="StericRender" width="520"></p>
 
----
+# StericRender: Topographic Steric Mapping with Molecular Visualisation
 
-**StericRender** applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender).
+StericRender computes topographic steric maps and buried volume (%V*Bur*) for any molecular structure, producing publication-quality SVG figures from the command line. It implements the SambVca methodology and uses [`xyzrender`](https://github.com/aligfellow/xyzrender) for oriented molecular overlays.
+
+[![PyPI](https://img.shields.io/pypi/v/stericrender)](https://pypi.org/project/stericrender/)
+[![PyPI Downloads](https://static.pepy.tech/badge/stericrender)](https://pepy.tech/projects/stericrender)
+[![License](https://img.shields.io/github/license/JamesOBrien2/StericRender)](https://github.com/JamesOBrien2/StericRender/blob/main/LICENSE)
+[![Powered by: uv](https://img.shields.io/badge/-uv-purple)](https://docs.astral.sh/uv)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Typing: ty](https://img.shields.io/badge/typing-ty-EFC621.svg)](https://github.com/astral-sh/ty)
+[![CI](https://img.shields.io/github/actions/workflow/status/JamesOBrien2/StericRender/ci.yml?branch=main&logo=github-actions)](https://github.com/JamesOBrien2/StericRender/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/JamesOBrien2/StericRender)](https://codecov.io/gh/JamesOBrien2/StericRender)
+
+
+![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
+
+## What it produces
+
+- Topographic steric maps (SVG, CSV, NPZ)
+- Buried volume (%VBur) with quadrant breakdowns (JSON)
+- Oriented molecular overlay SVG via xyzrender
+- Multi-frame XYZ batch processing
+- Three atomic radii sets: scaled-Bondi (default), Bondi, CSD
+- Configurable sphere radius, map radius, mesh spacing, colour palettes
+
+## CLI
+
+```bash
+stericrender complex.xyz \
+  --origin 1 \
+  --toward 2,3 \
+  --flip-z \
+  --config pmol \
+  --overlay-opacity 0.72 \
+  --map-palette sambvca \
+  --color-range -3 3 \
+  --output-prefix results/complex
+```
+
+The origin atom is automatically excluded from the steric analysis. Use `--include-origin` to override.
+
+## Installation
+
+```bash
+pip install stericrender
+# latest development version:
+pip install --upgrade git+https://github.com/JamesOBrien2/StericRender.git
+```
+
+Or with uv:
+
+```bash
+uv tool install stericrender
+```
+
+From source:
+
+```bash
+git clone https://github.com/JamesOBrien2/StericRender.git
+cd StericRender
+pip install -e .
+```
+
+## Python API
+
+```python
+import numpy as np
+from stericrender.io import load_structure_frames, atoms_to_arrays
+from stericrender.orientation import orient_positions
+from stericrender.radii import radii_for_symbols
+from stericrender import compute_buried_volume, compute_steric_map
+
+frames = load_structure_frames("complex.xyz")
+symbols, positions = atoms_to_arrays(frames[0].atoms)
+
+# orient: atom 1 at origin, +z toward atom 2
+oriented = orient_positions(positions, center_index=0, axis_indices=[1])
+selected = [i for i, s in enumerate(symbols) if s != "H" and i != 0]
+radii = np.array(radii_for_symbols([symbols[i] for i in selected]))
+
+volume = compute_buried_volume(oriented.positions[selected], radii)
+print(f"%VBur = {volume.percent_buried:.2f}")
+
+steric_map = compute_steric_map(oriented.positions[selected], radii)
+# steric_map.x, steric_map.y, steric_map.z — topographic grid arrays
+```
+
+## Sphere radius and map radius
+
+`--sphere-radius` scales the analysis sphere; `--map-radius` sets the display extent independently.
+
+| `--sphere-radius 2` | `--map-radius 5` |
+| ------------------- | ---------------- |
+| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
+
+### Available flags
+
+`--include`, `--exclude`, `--include-origin`, `--frames`, `--radii`, `--include-hydrogens`, `--sphere-radius`, `--map-radius`, `--mesh`, `--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`, `--stereo`, `--stereo-style`, `--no-contours`, `--no-colorbar`, `--no-vbur-label`, `--show-quadrants`, `--no-overlay`
+
+## Gallery
 
 ### Monocoordinated Ligands
 
@@ -38,51 +133,27 @@
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![complex 16](examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg) | ![complex 17](examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg) | ![complex 18](examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg) |
 
+## Acknowledgements
 
-### Radius/Zoom
+- [xyzrender](https://github.com/aligfellow/xyzrender) by [@aligfellow](https://github.com/aligfellow) — molecular rendering and SVG overlay
+- [Jonathan Di Petro (@jonathandip)](https://github.com/jonathandip) — zoom and radius concept, testing
+- The [SambVca](https://www.icb.csic.es/sambvca2-0/) group (Cavallo et al.) — the %VBur methodology and topographic steric map convention that StericRender implements
+- [morfeus-ml](https://github.com/digital-chemistry-laboratory/morfeus) — reference implementation used for validation
 
-`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
-
-| `--radius 2`                                                         | `--zoom 1.6`                                                     |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
-
-## CLI Arguments
-
-```bash
-stericrender complex.xyz \
-  --center 1 \
-  --axis 2,3 \
-  --exclude 1 \
-  --flip-z \
-  --config pmol \
-  --overlay-opacity 0.72 \
-  --map-palette sambvca \
-  --color-range -3 3 \
-  --output-prefix results/complex
-```
-
-#### Available flags
-`--include`, `--exclude`, `--frames`, `--radii`,
-`--include-hydrogens`, `--sphere-radius`/`--radius`, `--mesh`, `--visual-mesh`,
-`--config`, `--overlay-opacity`, `--overlay-all-atoms`, `--zoom`,
-`--stereo`, `--stereo-style`, `--no-contours`, `--no-colorbar`,
-`--no-vbur-label`, `--show-quadrants`, `--no-overlay`.
-
-## References
+## Citation
 
 If you use this repository, you must cite the following works:
 
 1. Laura Falivene, Raffaele Credendino, Albert Poater, Andrea Petta, Luigi Serra, Romina Oliva, Vittorio Scarano, and Luigi Cavallo,  
-   “SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,”  
+   "SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,"  
    *Organometallics* **2016**, *35*, 2286–2293.  
    DOI: [`10.1021/acs.organomet.6b00371`](https://doi.org/10.1021/acs.organomet.6b00371)
 
 2. Sílvia Escayola, Naeimeh Bahri-Laleh, and Albert Poater,  
-   “%VBur index and steric maps: from predictive catalysis to machine learning,”  
+   "%VBur index and steric maps: from predictive catalysis to machine learning,"  
    *Chemical Society Reviews* **2024**, *53*, 853–882.
 
 3. A. S. Goodfellow and B. N. Nguyen,  
-   “xyzrender,”  
+   "xyzrender,"  
    *Journal of Chemical Theory and Computation* **2026**.  
    DOI: [`10.1021/acs.jctc.5c02073`](https://doi.org/10.1021/acs.jctc.5c02073)

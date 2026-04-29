@@ -24,12 +24,12 @@ def test_cli_multi_xyz_selected_frames(tmp_path):
         "examples/sambvca/om6b00371_si_002.xyz",
         "--frames",
         "13,15",
-        "--center",
+        "--origin",
         "2",
-        "--axis",
+        "--toward",
         "3,13,14,25",
         "--exclude",
-        "1,2,65",
+        "1,65",
         "--no-overlay",
         "--output-prefix",
         str(output_prefix),
@@ -60,12 +60,10 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
     cli.main(
         [
             "examples/simple.xyz",
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--output-prefix",
             str(output_prefix),
         ]
@@ -80,7 +78,7 @@ def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
     assert not (tmp_path / "simple_overlay_atoms.xyz").exists()
 
 
-def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
+def test_cli_sphere_and_map_radius_passed_to_overlay(tmp_path, monkeypatch):
     output_prefix = tmp_path / "simple"
     captured = {}
 
@@ -93,14 +91,12 @@ def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
     cli.main(
         [
             "examples/simple.xyz",
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
-            "--radius",
-            "2",
+            "--sphere-radius",
+            "7.0",
             "--zoom",
             "1.75",
             "--output-prefix",
@@ -110,10 +106,40 @@ def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
 
     metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
     assert captured == {"sphere_radius": 7.0, "zoom": 1.75}
-    assert metadata["base_sphere_radius"] == 3.5
-    assert metadata["radius_multiplier"] == 2.0
     assert metadata["sphere_radius"] == 7.0
+    assert metadata["map_radius"] == 7.0
     assert metadata["zoom"] == 1.75
+
+
+def test_cli_map_radius_independent_of_sphere_radius(tmp_path, monkeypatch):
+    output_prefix = tmp_path / "simple"
+    captured = {}
+
+    def fake_overlay_renderer(**kwargs):
+        captured["sphere_radius"] = kwargs["sphere_radius"]
+
+    monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
+
+    cli.main(
+        [
+            "examples/simple.xyz",
+            "--origin",
+            "1",
+            "--toward",
+            "2",
+            "--sphere-radius",
+            "3.5",
+            "--map-radius",
+            "5.0",
+            "--output-prefix",
+            str(output_prefix),
+        ]
+    )
+
+    metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
+    assert captured["sphere_radius"] == 5.0
+    assert metadata["sphere_radius"] == 3.5
+    assert metadata["map_radius"] == 5.0
 
 
 def test_cli_stereo_options_pass_to_overlay(tmp_path, monkeypatch):
@@ -129,12 +155,10 @@ def test_cli_stereo_options_pass_to_overlay(tmp_path, monkeypatch):
     cli.main(
         [
             "examples/simple.xyz",
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--stereo",
             "point,ez",
             "--stereo-style",
@@ -163,12 +187,10 @@ def test_cli_can_hide_overlay_vbur_label(tmp_path, monkeypatch):
     cli.main(
         [
             "examples/simple.xyz",
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--no-vbur-label",
             "--no-colorbar",
             "--output-prefix",
@@ -188,12 +210,10 @@ def test_cli_accepts_legacy_map_subcommand(tmp_path):
         [
             "map",
             "examples/simple.xyz",
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--no-overlay",
             "--output-prefix",
             str(output_prefix),
@@ -233,12 +253,10 @@ def test_cli_include_hydrogens_passes_hydrogens_to_overlay(tmp_path, monkeypatch
     cli.main(
         [
             str(input_xyz),
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--include-hydrogens",
             "--output-prefix",
             str(output_prefix),
@@ -280,12 +298,10 @@ def test_cli_keeps_hidden_hydrogens_for_overlay_bond_order_context(tmp_path, mon
     cli.main(
         [
             str(input_xyz),
-            "--center",
+            "--origin",
             "1",
-            "--axis",
+            "--toward",
             "2",
-            "--exclude",
-            "1",
             "--output-prefix",
             str(output_prefix),
         ]

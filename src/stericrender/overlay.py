@@ -106,6 +106,7 @@ def steric_overlay_layer(
     palette: str = "sambvca",
     show_contours: bool = True,
     show_colorbar: bool = True,
+    show_vbur_label: bool = True,
     footer_layout: _OverlayFooterLayout | None = None,
 ) -> str:
     """Build an SVG group for the projected steric map."""

@@ -13,9 +13,19 @@ venv/
 
 output/
 results/
+
+# default CLI output files
 stericrender.json
 stericrender_grid.csv
 stericrender_grid.npz
 stericrender_map.svg
 stericrender_oriented.xyz
 stericrender_overlay.svg
+
+# generated example outputs (keep only SVGs committed in examples/images/)
+examples/images/**/*.json
+examples/images/**/*_grid.csv
+examples/images/**/*_grid.npz
+examples/images/**/*_oriented.xyz
+examples/images/**/report.json
+examples/images/simple*

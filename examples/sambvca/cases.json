@@ -4,182 +4,182 @@
     "figure": "Figure 5",
     "structure_index": 1,
     "description": "PCy3 monodentate ligand in Ni(CO)3 complex",
-    "center": "53",
-    "axis": "7",
     "exclude": "53-59",
     "flip_z": true,
-    "expected_percent_buried": 29.6
+    "expected_percent_buried": 29.6,
+    "origin": "53",
+    "toward": "7"
   },
   {
     "name": "complex_02_nhc_ni",
     "figure": "Figure 5",
     "structure_index": 2,
     "description": "NHC monodentate ligand in Ni(CO)3 complex",
-    "center": "1",
-    "axis": "15",
     "exclude": "1-7",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "15"
   },
   {
     "name": "complex_03_nhc_ir",
     "figure": "Figure 5",
     "structure_index": 3,
     "description": "NHC monodentate ligand in Ir(CO)2Cl complex",
-    "center": "68",
-    "axis": "8",
     "exclude": "68-72",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "68",
+    "toward": "8"
   },
   {
     "name": "complex_04_meduphos",
     "figure": "Figure 6",
     "structure_index": 4,
     "description": "MeDuPhos dicoordinated ligand",
-    "center": "1",
-    "axis": "2,7",
     "exclude": "1,22,23",
     "flip_z": true,
-    "expected_percent_buried": 47.0
+    "expected_percent_buried": 47.0,
+    "origin": "1",
+    "toward": "2,7"
   },
   {
     "name": "complex_05_box",
     "figure": "Figure 6",
     "structure_index": 5,
     "description": "Box dicoordinated ligand",
-    "center": "1",
-    "axis": "2,17",
     "exclude": "1,12,26",
     "flip_z": true,
-    "expected_percent_buried": 43.8
+    "expected_percent_buried": 43.8,
+    "origin": "1",
+    "toward": "2,17"
   },
   {
     "name": "complex_06_diphosphine",
     "figure": "Figure 6",
     "structure_index": 6,
     "description": "C2-symmetric diphosphine ligand",
-    "center": "1",
-    "axis": "2,9",
     "exclude": "1,80,81",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "2,9"
   },
   {
     "name": "complex_07_phox",
     "figure": "Figure 6",
     "structure_index": 7,
     "description": "PHOX dicoordinated ligand",
-    "center": "1",
-    "axis": "2,35",
     "exclude": "1,12,13",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "2,35"
   },
   {
     "name": "complex_08_xantphos",
     "figure": "Figure 6",
     "structure_index": 8,
     "description": "Xantphos dicoordinated ligand",
-    "center": "1",
-    "axis": "4,44",
     "exclude": "1,2,3",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "4,44"
   },
   {
     "name": "complex_09_diimine",
     "figure": "Figure 6",
     "structure_index": 9,
     "description": "Diimine dicoordinated ligand",
-    "center": "12",
-    "axis": "7,14",
     "exclude": "12,13,23",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "12",
+    "toward": "7,14"
   },
   {
     "name": "complex_10_taddol",
     "figure": "Figure 6",
     "structure_index": 10,
     "description": "TADDOL dicoordinated ligand",
-    "center": "1",
-    "axis": "2,3",
     "exclude": "1,65,66",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "2,3"
   },
   {
     "name": "complex_11_binol",
     "figure": "Figure 6",
     "structure_index": 11,
     "description": "BINOL dicoordinated ligand",
-    "center": "1",
-    "axis": "11,29",
     "exclude": "1,13,37",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "11,29"
   },
   {
     "name": "complex_12_bipy",
     "figure": "Figure 6",
     "structure_index": 12,
     "description": "Bipy dicoordinated ligand",
-    "center": "1",
-    "axis": "2,3",
     "exclude": "1,4,5",
-    "flip_z": true
+    "flip_z": true,
+    "origin": "1",
+    "toward": "2,3"
   },
   {
     "name": "complex_13_salen_mn",
     "figure": "Figure 7",
     "structure_index": 13,
     "description": "Salen Mn tetracoordinated ligand",
-    "center": "2",
-    "axis": "3,13,14,25",
     "exclude": "1,2,65",
     "flip_z": true,
-    "expected_percent_buried": 64.2
+    "expected_percent_buried": 64.2,
+    "origin": "2",
+    "toward": "3,13,14,25"
   },
   {
     "name": "complex_14_chiral_salen_mn",
     "figure": "Figure 7",
     "structure_index": 14,
     "description": "Chiral salen Mn tetracoordinated ligand",
-    "center": "1",
-    "axis": "3,5,6,7",
     "exclude": "1,2,4",
     "flip_z": true,
-    "expected_percent_buried": 65.5
+    "expected_percent_buried": 65.5,
+    "origin": "1",
+    "toward": "3,5,6,7"
   },
   {
     "name": "complex_15_zr_complex",
     "figure": "Figure 7",
     "structure_index": 15,
     "description": "ONNO Zr tetracoordinated ligand",
-    "center": "1",
-    "axis": "2,10,24,32",
     "exclude": "1,70,71",
     "flip_z": true,
-    "expected_percent_buried": 60.4
+    "expected_percent_buried": 60.4,
+    "origin": "1",
+    "toward": "2,10,24,32"
   },
   {
     "name": "complex_16_c2_zirconocene",
     "figure": "Figure 8",
     "structure_index": 16,
     "description": "C2-symmetric zirconocene",
-    "center": "1",
-    "axis": "22,23",
-    "exclude": "1,22,23"
+    "exclude": "1,22,23",
+    "origin": "1",
+    "toward": "22,23"
   },
   {
     "name": "complex_17_substituted_zirconocene",
     "figure": "Figure 8",
     "structure_index": 17,
     "description": "Substituted bisindenyl zirconocene",
-    "center": "1",
-    "axis": "22,23",
-    "exclude": "1,22,23"
+    "exclude": "1,22,23",
+    "origin": "1",
+    "toward": "22,23"
   },
   {
     "name": "complex_18_cs_zirconocene",
     "figure": "Figure 8",
     "structure_index": 18,
     "description": "Cs-symmetric zirconocene",
-    "center": "1",
-    "axis": "41,42",
-    "exclude": "1,41,42"
+    "exclude": "1,41,42",
+    "origin": "1",
+    "toward": "41,42"
   }
 ]
