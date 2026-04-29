@@ -98,7 +98,7 @@ def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
             "--exclude",
             "1",
             "--radius",
-            "4.25",
+            "2",
             "--zoom",
             "1.75",
             "--output-prefix",
@@ -107,8 +107,10 @@ def test_cli_radius_alias_and_zoom_pass_to_overlay(tmp_path, monkeypatch):
     )
 
     metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
-    assert captured == {"sphere_radius": 4.25, "zoom": 1.75}
-    assert metadata["sphere_radius"] == 4.25
+    assert captured == {"sphere_radius": 7.0, "zoom": 1.75}
+    assert metadata["base_sphere_radius"] == 3.5
+    assert metadata["radius_multiplier"] == 2.0
+    assert metadata["sphere_radius"] == 7.0
     assert metadata["zoom"] == 1.75
 
 
