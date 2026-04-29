@@ -14,7 +14,7 @@ StericRender computes topographic steric maps and buried volume (%V*Bur*) for an
 [![Codecov](https://img.shields.io/codecov/c/github/JamesOBrien2/StericRender)](https://codecov.io/gh/JamesOBrien2/StericRender)
 
 
-![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
+![zoomed out overlay](examples/images/controls/zoom_overlay.svg)
 
 ## What it produces
 
