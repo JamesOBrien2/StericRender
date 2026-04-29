@@ -136,7 +136,7 @@ steric_map = compute_steric_map(oriented.positions[selected], radii)
 ## Acknowledgements
 
 - [xyzrender](https://github.com/aligfellow/xyzrender) by [@aligfellow](https://github.com/aligfellow) — molecular rendering and SVG overlay
-- [Jonathan Di Petro (@jonathandip)](https://github.com/jonathandip) — zoom and radius concept, testing
+- [Jonathan Di Pietro (@jonathandip)](https://github.com/jonathandip) — zoom and radius concept, testing
 - The [SambVca](https://www.icb.csic.es/sambvca2-0/) group (Cavallo et al.) — the %VBur methodology and topographic steric map convention that StericRender implements
 - [morfeus-ml](https://github.com/digital-chemistry-laboratory/morfeus) — reference implementation used for validation
 
