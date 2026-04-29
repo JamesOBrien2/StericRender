@@ -4,20 +4,7 @@
 
 ---
 
-Steric maps and buried-volume figures, oriented with `xyzrender`.
-
-| Overlay                                                                                               | Steric map                                                                                    |
-| ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| <img src="examples/images/sambvca/complex_04_meduphos_overlay.svg" alt="example overlay" width="224"> | <img src="examples/images/sambvca/complex_04_meduphos_map.svg" alt="example map" width="300"> |
-
-## Gallery
-
-All examples are generated from the ACS SambVca SI multi-XYZ file. `[ref]`
-marks cases with a published `%VBur` value used as a numeric check.
-
-```bash
-python scripts/run_examples.py --with-overlay --output-dir examples/images/sambvca
-```
+> Steric maps and buried-volume figures, oriented with `xyzrender`.
 
 ### Monocoordinated Ligands
 
