@@ -244,6 +244,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
                 zoom=args.zoom,
+                include_hydrogens=args.include_hydrogens,
                 opacity=args.overlay_opacity,
                 color_range=color_range,
                 palette=args.map_palette,

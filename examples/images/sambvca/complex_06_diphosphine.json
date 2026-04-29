@@ -13,6 +13,7 @@
       2,
       9
     ],
+    "base_sphere_radius": 3.5,
     "center": 1,
     "color_range": [
       -3.0,
@@ -32,7 +33,8 @@
     "mesh": 0.05,
     "overlay_all_atoms": false,
     "radii": "scaled-bondi",
-    "render_config": "flat",
+    "radius_multiplier": 1.0,
+    "render_config": "pmol",
     "roll_degrees": 0.0,
     "selected_atoms": [
       2,
@@ -84,7 +86,8 @@
     ],
     "show_quadrants": false,
     "sphere_radius": 3.5,
-    "visual_mesh": 0.05
+    "visual_mesh": 0.05,
+    "zoom": 1.0
   },
   "percent_buried": 53.83717262942873,
   "quadrant_percent": {
