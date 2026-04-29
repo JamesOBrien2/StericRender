@@ -4,8 +4,8 @@
   "free_volume": 136.44675000000004,
   "hemisphere_percent": {
     "east": 23.90555946516538,
-    "north": 22.1247009148487,
-    "south": 25.840863782340517,
+    "north": 25.619704433497542,
+    "south": 22.419681716542833,
     "west": 24.097620520479285
   },
   "metadata": {
@@ -18,12 +18,7 @@
       -3.0,
       3.0
     ],
-    "dihedral": [
-      1,
-      2,
-      3,
-      4
-    ],
+    "dihedral": null,
     "dihedral_target_degrees": 0.0,
     "exclude": "1",
     "flip_z": false,
@@ -33,13 +28,13 @@
     "include_hydrogens": false,
     "input": "examples/simple.xyz",
     "map_palette": "sambvca",
-    "measured_dihedral_degrees": 180.0,
+    "measured_dihedral_degrees": null,
     "mesh": 0.05,
     "overlay_all_atoms": false,
     "radii": "scaled-bondi",
     "radius_multiplier": 1.0,
     "render_config": "pmol",
-    "roll_degrees": -180.0,
+    "roll_degrees": 0.0,
     "selected_atoms": [
       2,
       3,
@@ -53,10 +48,10 @@
   },
   "percent_buried": 24.00261499612554,
   "quadrant_percent": {
-    "NE": 22.042993925080737,
-    "NW": 22.204676163818913,
-    "SE": 25.728648814248515,
-    "SW": 25.950716513621394
+    "NE": 25.50840103003315,
+    "NW": 25.728648814248515,
+    "SE": 22.336689365139048,
+    "SW": 22.50092699631383
   },
   "sphere_volume": 179.54137500000004,
   "total_voxels": 1436331,
