@@ -43,7 +43,7 @@ def main() -> None:
             "--exclude",
             case["exclude"],
             "--config",
-            case.get("config", "flat"),
+            case.get("config", "pmol"),
             "--color-range",
             str(case.get("color_min", -3)),
             str(case.get("color_max", 3)),
