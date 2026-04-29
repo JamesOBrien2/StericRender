@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 
-from stericrender.maps import StericMapResult
 from stericrender.export import vbur_label_svg
+from stericrender.maps import StericMapResult
 from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg
 from stericrender.volume import BuriedVolumeResult
 

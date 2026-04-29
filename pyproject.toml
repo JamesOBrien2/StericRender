@@ -53,3 +53,8 @@ known-first-party = ["stericrender"]
 
 [tool.ty]
 python = ".venv"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.12",
+]

@@ -3,8 +3,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from stericrender.maps import StericMapResult
 from stericrender.export import write_map_svg
+from stericrender.maps import StericMapResult
 from stericrender.overlay import (
     _clip_molecule_to_disk,
     _clip_molecule_to_viewport,
@@ -12,7 +12,14 @@ from stericrender.overlay import (
     _overlay_footer_layout,
     steric_overlay_layer,
 )
-from stericrender.visual import color_for_value, colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg, steric_map_rgba
+from stericrender.visual import (
+    color_for_value,
+    colorbar_svg,
+    contour_segments,
+    steric_map_edge_svg,
+    steric_map_image_svg,
+    steric_map_rgba,
+)
 from stericrender.volume import BuriedVolumeResult
 
 
