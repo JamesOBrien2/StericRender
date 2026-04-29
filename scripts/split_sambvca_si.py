@@ -44,4 +44,3 @@ def split_multi_xyz(input_path: Path, output_dir: Path) -> list[Path]:
 
 if __name__ == "__main__":
     main()
-

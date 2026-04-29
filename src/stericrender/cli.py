@@ -32,7 +32,9 @@ def main(argv: list[str] | None = None) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="stericrender")
     parser.add_argument("input", help="Input structure supported by xyzrender.load(), or plain XYZ fallback")
-    parser.add_argument("--origin", required=True, help="1-based index of the origin atom (auto-excluded from analysis)")
+    parser.add_argument(
+        "--origin", required=True, help="1-based index of the origin atom (auto-excluded from analysis)"
+    )
     parser.add_argument("--toward", required=True, help="1-based atom indices/ranges whose centroid defines +z")
     parser.add_argument("--dihedral", help="Four 1-based atom indices used for deterministic z-axis roll")
     parser.add_argument("--dihedral-target", type=float, default=0.0, help="Target roll angle in degrees")
@@ -250,7 +252,9 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
             overlay_indices = selected if args.include_hydrogens else graph_selected
             overlay_symbols = [symbols[idx] for idx in overlay_indices]
             overlay_positions = oriented.positions[overlay_indices]
-            write_xyz(arrays_to_atoms(overlay_symbols, overlay_positions), overlay_xyz, title="StericRender overlay atoms")
+            write_xyz(
+                arrays_to_atoms(overlay_symbols, overlay_positions), overlay_xyz, title="StericRender overlay atoms"
+            )
         try:
             write_xyzrender_overlay_svg(
                 oriented_xyz=overlay_xyz,

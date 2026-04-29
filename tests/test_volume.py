@@ -24,4 +24,3 @@ def test_steric_map_has_finite_values_for_atom_at_origin():
         mesh=0.5,
     )
     assert np.isfinite(result.z).any()
-

@@ -92,4 +92,3 @@ def _normalize(vector: np.ndarray, name: str) -> np.ndarray:
     if norm < 1e-12:
         raise ValueError(f"Cannot normalize zero-length {name}")
     return vector / norm
-

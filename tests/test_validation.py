@@ -54,4 +54,3 @@ def test_morfeus_reference_smoke_if_installed():
         density=0.001,
     )
     assert abs(comparison.delta_percent) < 1.5
-

@@ -406,12 +406,16 @@ def colorbar_svg(
             f'<rect x="{x + i * segment_w:.2f}" y="{y:.2f}" width="{segment_w + 0.2:.2f}" '
             f'height="{height:.2f}" fill="{color_for_value(value, vmin, vmax, palette)}"/>\n'
         )
-    lines.append(f'<rect x="{x:.2f}" y="{y:.2f}" width="{width:.2f}" height="{height:.2f}" fill="none" stroke="#111827" stroke-width="1"/>\n')
+    lines.append(
+        f'<rect x="{x:.2f}" y="{y:.2f}" width="{width:.2f}" height="{height:.2f}" fill="none" stroke="#111827" stroke-width="1"/>\n'
+    )
     for i in range(ticks):
         t = i / max(ticks - 1, 1)
         value = vmin + t * (vmax - vmin)
         tx = x + t * width
-        lines.append(f'<line x1="{tx:.2f}" y1="{y + height:.2f}" x2="{tx:.2f}" y2="{y + height + 6:.2f}" stroke="#111827" stroke-width="1"/>\n')
+        lines.append(
+            f'<line x1="{tx:.2f}" y1="{y + height:.2f}" x2="{tx:.2f}" y2="{y + height + 6:.2f}" stroke="#111827" stroke-width="1"/>\n'
+        )
         lines.append(
             f'<text x="{tx:.2f}" y="{y + height + font_size + 7:.2f}" text-anchor="middle" '
             f'font-family="Arial,sans-serif" font-size="{font_size}" fill="#1f2933">{value:.1f}</text>\n'
@@ -424,7 +428,9 @@ def colorbar_svg(
     return "".join(lines)
 
 
-def contour_segments(x: np.ndarray, y: np.ndarray, z: np.ndarray, levels: np.ndarray) -> list[tuple[float, float, float, float]]:
+def contour_segments(
+    x: np.ndarray, y: np.ndarray, z: np.ndarray, levels: np.ndarray
+) -> list[tuple[float, float, float, float]]:
     """Build contour line segments with a small marching-squares implementation."""
     segments: list[tuple[float, float, float, float]] = []
     for level in levels:

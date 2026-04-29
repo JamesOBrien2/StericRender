@@ -67,6 +67,7 @@ def write_map_svg(
     z_min, z_max = color_range or (-sphere_radius, sphere_radius)
     if not finite.size:
         z_min, z_max = -sphere_radius, sphere_radius
+
     def sx(x: float) -> float:
         return margin + (x + sphere_radius) / (2 * sphere_radius) * plot_size
 
@@ -76,7 +77,7 @@ def write_map_svg(
     lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">\n',
         '<rect width="100%" height="100%" fill="#ffffff"/>\n',
-        '<style>text{font-family:Arial,sans-serif;fill:#1f2933} .small{font-size:14px}</style>\n',
+        "<style>text{font-family:Arial,sans-serif;fill:#1f2933} .small{font-size:14px}</style>\n",
         steric_map_image_svg(
             x=steric_map.x,
             y=steric_map.y,

@@ -28,4 +28,3 @@ def test_dihedral_returns_float_angle():
         ]
     )
     assert abs(abs(dihedral_degrees(points)) - 90.0) < 1e-8
-

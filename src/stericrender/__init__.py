@@ -11,4 +11,3 @@ __all__ = [
     "compute_buried_volume",
     "compute_steric_map",
 ]
-

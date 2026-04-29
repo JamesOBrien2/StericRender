@@ -173,8 +173,8 @@ def steric_overlay_layer(
     lines.extend(
         [
             f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}" fill="none" stroke="#111827" stroke-width="1.6"/>\n',
-            f'    <line x1="{cx-r:.2f}" y1="{cy:.2f}" x2="{cx+r:.2f}" y2="{cy:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
-            f'    <line x1="{cx:.2f}" y1="{cy-r:.2f}" x2="{cx:.2f}" y2="{cy+r:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
+            f'    <line x1="{cx - r:.2f}" y1="{cy:.2f}" x2="{cx + r:.2f}" y2="{cy:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
+            f'    <line x1="{cx:.2f}" y1="{cy - r:.2f}" x2="{cx:.2f}" y2="{cy + r:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
             vbur_label_svg(cx, footer_layout.label_y, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
@@ -241,11 +241,7 @@ def _clip_molecule_to_disk(svg: str, *, cx: float, cy: float, r: float) -> str:
     if bg_match:
         background, body = bg_match.groups()
     clip_id = "stericrender-map-clip"
-    defs = (
-        f'  <defs><clipPath id="{clip_id}">'
-        f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}"/>'
-        "</clipPath></defs>\n"
-    )
+    defs = f'  <defs><clipPath id="{clip_id}"><circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}"/></clipPath></defs>\n'
     return (
         open_tag
         + defs
@@ -267,14 +263,7 @@ def _clip_molecule_to_viewport(svg: str) -> str:
     bg_match = re.match(r'(?s)(\s*<rect\b[^>]*width="100%"[^>]*/>\s*)(.*)', body)
     if bg_match:
         background, body = bg_match.groups()
-    return (
-        open_tag
-        + background
-        + '  <g id="stericrender-molecule">\n'
-        + body
-        + "  </g>\n"
-        + close_tag
-    )
+    return open_tag + background + '  <g id="stericrender-molecule">\n' + body + "  </g>\n" + close_tag
 
 
 def _expand_svg_height(svg: str, height: float) -> str:
@@ -329,7 +318,9 @@ def _molecule_content_bottom(svg: str) -> float | None:
         elif name == "path":
             d_match = re.search(r'\bd="([^"]*)"', attrs)
             if d_match:
-                numbers = [float(value) for value in re.findall(r"[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?", d_match.group(1))]
+                numbers = [
+                    float(value) for value in re.findall(r"[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?", d_match.group(1))
+                ]
                 if len(numbers) >= 2:
                     bottoms.append(max(numbers[1::2]) + stroke_pad)
     return max(bottoms) if bottoms else None

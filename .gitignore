@@ -29,3 +29,6 @@ examples/images/**/*_grid.npz
 examples/images/**/*_oriented.xyz
 examples/images/**/report.json
 examples/images/simple*
+
+# Local Claude config
+.claude/

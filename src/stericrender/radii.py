@@ -48,4 +48,3 @@ def radius_for_symbol(symbol: str, radii: str = "scaled-bondi", default: float =
 def radii_for_symbols(symbols: list[str], radii: str = "scaled-bondi") -> list[float]:
     """Return radii for symbols."""
     return [radius_for_symbol(symbol, radii=radii) for symbol in symbols]
-
