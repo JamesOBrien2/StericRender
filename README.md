@@ -54,7 +54,7 @@ python scripts/run_examples.py --with-overlay --output-dir examples/images/sambv
 ## CLI
 
 ```bash
-stericrender map complex.xyz \
+stericrender complex.xyz \
   --center 1 \
   --axis 2,3 \
   --exclude 1 \
@@ -68,16 +68,9 @@ stericrender map complex.xyz \
 
 Radius and zoom examples:
 
-```bash
-# Increase the analytical steric-map sphere radius.
-stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --radius 4.5
-
-# Zoom the overlay out while keeping the steric-map radius unchanged.
-stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --zoom 1.6
-
-# Combine a larger steric-map radius with a wider overlay view.
-stericrender map complex.xyz --center 1 --axis 2,3 --exclude 1 --radius 4.5 --zoom 1.6
-```
+| `--radius 4.5` | `--zoom 1.6` | `--radius 4.5 --zoom 1.6` |
+|---|---|---|
+| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) | ![larger steric radius and zoomed out overlay](examples/images/controls/radius_zoom_overlay.svg) |
 
 Outputs:
 
