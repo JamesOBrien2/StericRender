@@ -6,6 +6,15 @@
 
 **StericRender** applies the concepts and methods from steric maps and buried-volume analysis ([`SambVca`](https://pubs.acs.org/doi/10.1021/acs.organomet.6b00371)), with the molecular rendering workflow [`xyzrender`](https://github.com/aligfellow/xyzrender).
 
+
+### Radius/Zoom
+
+`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
+
+| `--radius 2`                                                         | `--zoom 1.6`                                                     |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
+
 ### Monocoordinated Ligands
 
 | PCy3                                                              | NHC-Ni                                                              | NHC-Ir                                                              |
@@ -37,14 +46,6 @@
 | C2 zirconocene                                                               | Substituted zirconocene                                                               | Cs zirconocene                                                               |
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![complex 16](examples/images/sambvca/complex_16_c2_zirconocene_overlay.svg) | ![complex 17](examples/images/sambvca/complex_17_substituted_zirconocene_overlay.svg) | ![complex 18](examples/images/sambvca/complex_18_cs_zirconocene_overlay.svg) |
-
-### Radius/Zoom
-
-`--radius` scales the steric-map sphere; `--zoom` only changes the overlay framing.
-
-| `--radius 2`                                                         | `--zoom 1.6`                                                     |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| ![larger steric radius](examples/images/controls/radius_overlay.svg) | ![zoomed out overlay](examples/images/controls/zoom_overlay.svg) |
 
 ## CLI Arguments
 
