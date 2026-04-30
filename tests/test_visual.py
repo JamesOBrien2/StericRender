@@ -189,8 +189,31 @@ def test_overlay_layer_includes_full_opacity_colorbar():
 
     assert 'id="stericrender-map-layer" opacity="0.720"' in svg
     assert 'class="stericrender-colorbar"' in svg
-    assert 'class="stericrender-vbur-label"' in svg
+    assert svg.count('class="stericrender-vbur-label"') == 1
     assert ">50.00</tspan>" in svg
+
+
+def test_overlay_layer_can_hide_vbur_label():
+    steric_map = StericMapResult(
+        x=np.array([-1.0, 0.0, 1.0]),
+        y=np.array([-1.0, 0.0, 1.0]),
+        z=np.array([[np.nan, 0.0, np.nan], [1.0, 2.0, 1.0], [np.nan, 0.0, np.nan]]),
+    )
+    volume = BuriedVolumeResult(50.0, 1.0, 2.0, 1.0, 0.1, 10, 20, {}, {})
+
+    svg = steric_overlay_layer(
+        steric_map,
+        volume,
+        sphere_radius=1.0,
+        width=200.0,
+        height=200.0,
+        scale=80.0,
+        opacity=0.72,
+        show_vbur_label=False,
+    )
+
+    assert 'class="stericrender-vbur-label"' not in svg
+    assert ">50.00</tspan>" not in svg
 
 
 def test_overlay_footer_follows_zoomed_map_instead_of_viewport_bottom():

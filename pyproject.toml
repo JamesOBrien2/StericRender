@@ -10,7 +10,6 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dependencies = [
-  "morfeus-ml>=0.8.0",
   "numpy>=1.22",
   "pillow>=10",
   "xyzrender",
@@ -26,9 +25,10 @@ test = [
   "pytest-cov",
 ]
 validation = [
-  "morfeus-ml",
+  "morfeus-ml>=0.8.0",
 ]
 dev = [
+  "morfeus-ml>=0.8.0",
   "ruff",
   "ty",
   "pytest",

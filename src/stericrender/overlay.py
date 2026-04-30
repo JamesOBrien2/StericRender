@@ -175,11 +175,10 @@ def steric_overlay_layer(
             f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}" fill="none" stroke="#111827" stroke-width="1.6"/>\n',
             f'    <line x1="{cx - r:.2f}" y1="{cy:.2f}" x2="{cx + r:.2f}" y2="{cy:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
             f'    <line x1="{cx:.2f}" y1="{cy - r:.2f}" x2="{cx:.2f}" y2="{cy + r:.2f}" stroke="#111827" stroke-width="1.1"/>\n',
-            vbur_label_svg(cx, footer_layout.label_y, volume.percent_buried, value_size=25, label_size=21),
         ]
     )
     if show_vbur_label:
-        lines.append(vbur_label_svg(cx, height + 40.0, volume.percent_buried, value_size=25, label_size=21))
+        lines.append(vbur_label_svg(cx, footer_layout.label_y, volume.percent_buried, value_size=25, label_size=21))
     if show_colorbar:
         assert footer_layout.colorbar_y is not None
         bar_width = min(width - 80.0, 640.0)
