@@ -2,12 +2,9 @@
 
 from __future__ import annotations
 
-import base64
 from collections import defaultdict, deque
-from io import BytesIO
 
 import numpy as np
-from PIL import Image
 
 PALETTES: dict[str, list[tuple[int, int, int]]] = {
     "sambvca": [
@@ -48,13 +45,7 @@ def color_for_value(value: float, vmin: float, vmax: float, palette: str = "samb
     return "#{:02x}{:02x}{:02x}".format(*(int(round(c)) for c in rgb))
 
 
-def rgb_for_value(value: float, vmin: float, vmax: float, palette: str = "sambvca") -> tuple[int, int, int]:
-    """Map a scalar value to an RGB tuple."""
-    color = color_for_value(value, vmin, vmax, palette)
-    return int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
-
-
-def steric_map_image_svg(
+def steric_map_fill_svg(
     *,
     x: np.ndarray,
     y: np.ndarray,
@@ -68,26 +59,76 @@ def steric_map_image_svg(
     vmax: float,
     palette: str = "sambvca",
     opacity: float = 1.0,
-    pixels: int = 900,
     bands: int = 34,
+    clip_id: str = "stericrender-map-fill-clip",
 ) -> str:
-    """Return an embedded PNG image for smooth filled steric-map colours."""
-    data_uri = steric_map_png_data_uri(
-        x=x,
-        y=y,
-        z=z,
-        sphere_radius=sphere_radius,
-        vmin=vmin,
-        vmax=vmax,
-        palette=palette,
-        pixels=pixels,
-        bands=bands,
-    )
-    return (
-        f'<image class="stericrender-filled-map" x="{svg_x:.2f}" y="{svg_y:.2f}" '
-        f'width="{width:.2f}" height="{height:.2f}" href="{data_uri}" '
-        f'opacity="{opacity:.3f}" preserveAspectRatio="none"/>\n'
-    )
+    """Return vector SVG paths for the filled steric-map colour field."""
+    bands = max(int(bands), 2)
+    levels = np.linspace(vmin, vmax, bands)
+    paths_by_color: dict[str, list[str]] = defaultdict(list)
+
+    def sx(value: float) -> float:
+        return svg_x + (value + sphere_radius) / (2.0 * sphere_radius) * width
+
+    def sy(value: float) -> float:
+        return svg_y + (sphere_radius - value) / (2.0 * sphere_radius) * height
+
+    def flush_run(color: str | None, x0: float | None, x1: float, top: float, bottom: float) -> None:
+        if color is None or x0 is None:
+            return
+        paths_by_color[color].append(f"M {x0:.2f} {top:.2f} H {x1:.2f} V {bottom:.2f} H {x0:.2f} Z")
+
+    for iy in range(len(y) - 1):
+        top = sy(float(y[iy + 1]))
+        bottom = sy(float(y[iy]))
+        run_color: str | None = None
+        run_start: float | None = None
+        run_end = sx(float(x[0]))
+        for ix in range(len(x) - 1):
+            cell_values = np.array(
+                [
+                    z[iy, ix],
+                    z[iy, ix + 1],
+                    z[iy + 1, ix],
+                    z[iy + 1, ix + 1],
+                ],
+                dtype=float,
+            )
+            finite_values = cell_values[np.isfinite(cell_values)]
+            left = sx(float(x[ix]))
+            right = sx(float(x[ix + 1]))
+            if not finite_values.size:
+                flush_run(run_color, run_start, run_end, top, bottom)
+                run_color = None
+                run_start = None
+                run_end = right
+                continue
+
+            value = float(finite_values.mean())
+            clipped = float(np.clip(value, vmin, vmax))
+            banded = float(levels[np.abs(levels - clipped).argmin()])
+            color = color_for_value(banded, vmin, vmax, palette)
+            if color == run_color:
+                run_end = right
+                continue
+            flush_run(run_color, run_start, run_end, top, bottom)
+            run_color = color
+            run_start = left
+            run_end = right
+        flush_run(run_color, run_start, run_end, top, bottom)
+
+    cx = svg_x + width / 2.0
+    cy = svg_y + height / 2.0
+    r = min(width, height) / 2.0
+    lines = [
+        f'<g class="stericrender-filled-map" opacity="{opacity:.3f}">\n',
+        f'<defs><clipPath id="{clip_id}"><circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}"/></clipPath></defs>\n',
+        f'<g clip-path="url(#{clip_id})">\n',
+    ]
+    for color, commands in paths_by_color.items():
+        lines.append(f'<path d="{" ".join(commands)}" fill="{color}" stroke="{color}" stroke-width="0.12"/>\n')
+    lines.append("</g>\n</g>\n")
+    return "".join(lines)
 
 
 def steric_map_edge_svg(
@@ -172,215 +213,6 @@ def _svg_smooth_path(points: list[tuple[float, float]], sx, sy) -> str:
         commands.append(f"Q {x:.2f} {y:.2f} {mx:.2f} {my:.2f}")
     commands.append(f"L {coords[-1][0]:.2f} {coords[-1][1]:.2f}")
     return " ".join(commands)
-
-
-def steric_map_png_data_uri(
-    *,
-    x: np.ndarray,
-    y: np.ndarray,
-    z: np.ndarray,
-    sphere_radius: float,
-    vmin: float,
-    vmax: float,
-    palette: str = "sambvca",
-    pixels: int = 900,
-    bands: int = 34,
-) -> str:
-    """Encode the steric-map grid as a smooth circular RGBA PNG data URI."""
-    image = steric_map_rgba(
-        x=x,
-        y=y,
-        z=z,
-        sphere_radius=sphere_radius,
-        vmin=vmin,
-        vmax=vmax,
-        palette=palette,
-        pixels=pixels,
-        bands=bands,
-    )
-    buffer = BytesIO()
-    Image.fromarray(image, mode="RGBA").save(buffer, format="PNG", optimize=True)
-    encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
-    return f"data:image/png;base64,{encoded}"
-
-
-def steric_map_rgba(
-    *,
-    x: np.ndarray,
-    y: np.ndarray,
-    z: np.ndarray,
-    sphere_radius: float,
-    vmin: float,
-    vmax: float,
-    palette: str = "sambvca",
-    pixels: int = 900,
-    bands: int = 34,
-) -> np.ndarray:
-    """Sample a steric-map grid into a circular, banded RGBA image."""
-    pixels = max(int(pixels), 32)
-    bands = max(int(bands), 2)
-    x0 = float(x[0])
-    y0 = float(y[0])
-    dx = float(x[1] - x[0]) if len(x) > 1 else 1.0
-    dy = float(y[1] - y[0]) if len(y) > 1 else 1.0
-    levels = np.linspace(vmin, vmax, bands)
-
-    xx = -sphere_radius + (np.arange(pixels, dtype=float) + 0.5) / pixels * 2.0 * sphere_radius
-    yy = sphere_radius - (np.arange(pixels, dtype=float) + 0.5) / pixels * 2.0 * sphere_radius
-    grid_x, grid_y = np.meshgrid(xx, yy)
-    distance = np.sqrt(grid_x * grid_x + grid_y * grid_y)
-    pixel_width = 2.0 * sphere_radius / pixels
-    alpha_mask = np.clip((sphere_radius - distance) / pixel_width + 0.5, 0.0, 1.0)
-    circle = alpha_mask > 0.0
-
-    fx = (grid_x - x0) / dx
-    fy = (grid_y - y0) / dy
-    ix = np.floor(fx).astype(int)
-    iy = np.floor(fy).astype(int)
-    inside = circle & (ix >= 0) & (iy >= 0) & (ix + 1 < len(x)) & (iy + 1 < len(y))
-
-    values = np.full((pixels, pixels), np.nan, dtype=float)
-    if np.any(inside):
-        rows, cols = np.where(inside)
-        ixv = ix[rows, cols]
-        iyv = iy[rows, cols]
-        tx = fx[rows, cols] - ixv
-        ty = fy[rows, cols] - iyv
-        vals = np.stack(
-            [
-                z[iyv, ixv],
-                z[iyv, ixv + 1],
-                z[iyv + 1, ixv],
-                z[iyv + 1, ixv + 1],
-            ],
-            axis=1,
-        )
-        weights = np.stack(
-            [
-                (1.0 - tx) * (1.0 - ty),
-                tx * (1.0 - ty),
-                (1.0 - tx) * ty,
-                tx * ty,
-            ],
-            axis=1,
-        )
-        finite_vals = np.isfinite(vals)
-        finite_weights = np.where(finite_vals, weights, 0.0)
-        weight_sum = finite_weights.sum(axis=1)
-        finite = weight_sum > 0.0
-        sampled = np.sum(np.where(finite_vals, vals, 0.0) * finite_weights, axis=1) / np.where(
-            finite,
-            weight_sum,
-            1.0,
-        )
-        values[rows[finite], cols[finite]] = sampled[finite]
-    valid_coverage, edge_values = _supersampled_valid_coverage(
-        x=x,
-        y=y,
-        z=z,
-        sphere_radius=sphere_radius,
-        pixels=pixels,
-        samples=4,
-    )
-
-    edge = ~np.isfinite(values) & (valid_coverage > 0.0) & np.isfinite(edge_values)
-    values[edge] = edge_values[edge]
-    valid = np.isfinite(values) & (valid_coverage > 0.0)
-    out = np.zeros((pixels, pixels, 4), dtype=np.uint8)
-    if np.any(valid):
-        clipped = np.clip(values[valid], vmin, vmax)
-        nearest = np.abs(clipped[:, None] - levels[None, :]).argmin(axis=1)
-        banded = levels[nearest]
-        colors = np.array([rgb_for_value(float(value), vmin, vmax, palette) for value in banded], dtype=np.uint8)
-        out[valid, :3] = colors
-        alpha = alpha_mask[valid] * np.clip(valid_coverage[valid], 0.0, 1.0)
-        out[valid, 3] = np.round(255.0 * alpha).astype(np.uint8)
-    return out
-
-
-def _supersampled_valid_coverage(
-    *,
-    x: np.ndarray,
-    y: np.ndarray,
-    z: np.ndarray,
-    sphere_radius: float,
-    pixels: int,
-    samples: int = 4,
-) -> tuple[np.ndarray, np.ndarray]:
-    """Return subpixel coverage and fallback colours for finite map regions."""
-    x0 = float(x[0])
-    y0 = float(y[0])
-    dx = float(x[1] - x[0]) if len(x) > 1 else 1.0
-    dy = float(y[1] - y[0]) if len(y) > 1 else 1.0
-    samples = max(int(samples), 1)
-    pixel_width = 2.0 * sphere_radius / pixels
-    coverage = np.zeros((pixels, pixels), dtype=float)
-    value_sum = np.zeros((pixels, pixels), dtype=float)
-    value_count = np.zeros((pixels, pixels), dtype=float)
-    offsets = (np.arange(samples, dtype=float) + 0.5) / samples - 0.5
-    finite_mask = np.isfinite(z)
-
-    for oy in offsets:
-        yy = sphere_radius - (np.arange(pixels, dtype=float) + 0.5 + oy) * pixel_width
-        for ox in offsets:
-            xx = -sphere_radius + (np.arange(pixels, dtype=float) + 0.5 + ox) * pixel_width
-            grid_x, grid_y = np.meshgrid(xx, yy)
-            circle = grid_x * grid_x + grid_y * grid_y <= sphere_radius * sphere_radius
-            fx = (grid_x - x0) / dx
-            fy = (grid_y - y0) / dy
-            ix = np.floor(fx).astype(int)
-            iy = np.floor(fy).astype(int)
-            inside = circle & (ix >= 0) & (iy >= 0) & (ix + 1 < len(x)) & (iy + 1 < len(y))
-            if not np.any(inside):
-                continue
-            rows, cols = np.where(inside)
-            ixv = ix[rows, cols]
-            iyv = iy[rows, cols]
-            tx = fx[rows, cols] - ixv
-            ty = fy[rows, cols] - iyv
-            weights = np.stack(
-                [
-                    (1.0 - tx) * (1.0 - ty),
-                    tx * (1.0 - ty),
-                    (1.0 - tx) * ty,
-                    tx * ty,
-                ],
-                axis=1,
-            )
-            finite_vals = np.stack(
-                [
-                    finite_mask[iyv, ixv],
-                    finite_mask[iyv, ixv + 1],
-                    finite_mask[iyv + 1, ixv],
-                    finite_mask[iyv + 1, ixv + 1],
-                ],
-                axis=1,
-            )
-            vals = np.stack(
-                [
-                    z[iyv, ixv],
-                    z[iyv, ixv + 1],
-                    z[iyv + 1, ixv],
-                    z[iyv + 1, ixv + 1],
-                ],
-                axis=1,
-            )
-            finite_weights = np.where(finite_vals, weights, 0.0)
-            weight_sum = finite_weights.sum(axis=1)
-            finite = weight_sum > 0.0
-            coverage[rows, cols] += weight_sum
-            sampled = np.sum(np.where(finite_vals, vals, 0.0) * finite_weights, axis=1) / np.where(
-                finite,
-                weight_sum,
-                1.0,
-            )
-            value_sum[rows[finite], cols[finite]] += sampled[finite]
-            value_count[rows[finite], cols[finite]] += 1.0
-
-    edge_values = np.full((pixels, pixels), np.nan, dtype=float)
-    finite_values = value_count > 0.0
-    edge_values[finite_values] = value_sum[finite_values] / value_count[finite_values]
-    return coverage / float(samples * samples), edge_values
 
 
 def colorbar_svg(

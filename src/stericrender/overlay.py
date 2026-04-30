@@ -10,7 +10,7 @@ import numpy as np
 
 from stericrender.export import vbur_label_svg
 from stericrender.maps import StericMapResult
-from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg
+from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_fill_svg
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -125,7 +125,7 @@ def steric_overlay_layer(
         '  <g id="stericrender-overlay" style="pointer-events:none">\n',
         "    <title>StericRender topographic steric map overlay</title>\n",
         f'    <g id="stericrender-map-layer" opacity="{opacity:.3f}">\n',
-        steric_map_image_svg(
+        steric_map_fill_svg(
             x=steric_map.x,
             y=steric_map.y,
             z=steric_map.z,
@@ -138,8 +138,8 @@ def steric_overlay_layer(
             vmax=z_max,
             palette=palette,
             opacity=1.0,
-            pixels=1000,
             bands=34,
+            clip_id="stericrender-overlay-fill-clip",
         ),
         steric_map_edge_svg(
             x=steric_map.x,

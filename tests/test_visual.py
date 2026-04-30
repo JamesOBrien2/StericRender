@@ -17,8 +17,7 @@ from stericrender.visual import (
     colorbar_svg,
     contour_segments,
     steric_map_edge_svg,
-    steric_map_image_svg,
-    steric_map_rgba,
+    steric_map_fill_svg,
 )
 from stericrender.volume import BuriedVolumeResult
 
@@ -37,12 +36,12 @@ def test_colorbar_svg_contains_tick_labels():
     assert "3.0" in svg
 
 
-def test_steric_map_image_svg_embeds_png_data_uri():
+def test_steric_map_fill_svg_emits_vector_cells():
     x = np.array([-1.0, 0.0, 1.0])
     y = np.array([-1.0, 0.0, 1.0])
     z = np.array([[0.0, 0.5, 1.0], [0.5, 1.0, 0.5], [1.0, 0.5, 0.0]])
 
-    svg = steric_map_image_svg(
+    svg = steric_map_fill_svg(
         x=x,
         y=y,
         z=z,
@@ -53,11 +52,13 @@ def test_steric_map_image_svg_embeds_png_data_uri():
         sphere_radius=1.0,
         vmin=-1.0,
         vmax=1.0,
-        pixels=32,
     )
 
     assert 'class="stericrender-filled-map"' in svg
-    assert "data:image/png;base64," in svg
+    assert '<clipPath id="stericrender-map-fill-clip">' in svg
+    assert "<path " in svg
+    assert "<image " not in svg
+    assert "data:image/png" not in svg
 
 
 def test_steric_map_edge_svg_traces_finite_boundary():
@@ -82,50 +83,26 @@ def test_steric_map_edge_svg_traces_finite_boundary():
     assert "<path " in svg
 
 
-def test_steric_map_rgba_antialiases_circular_edge():
-    x = np.linspace(-1.0, 1.0, 5)
-    y = np.linspace(-1.0, 1.0, 5)
-    xx, yy = np.meshgrid(x, y)
-    z = 1.0 - xx * xx - yy * yy
-    z[xx * xx + yy * yy > 1.0] = np.nan
+def test_steric_map_fill_svg_skips_empty_cells():
+    x = np.array([-1.0, 0.0, 1.0])
+    y = np.array([-1.0, 0.0, 1.0])
+    z = np.full((3, 3), np.nan)
 
-    image = steric_map_rgba(
+    svg = steric_map_fill_svg(
         x=x,
         y=y,
         z=z,
+        svg_x=0.0,
+        svg_y=0.0,
+        width=100.0,
+        height=100.0,
         sphere_radius=1.0,
         vmin=-1.0,
         vmax=1.0,
-        pixels=48,
     )
 
-    alpha = image[:, :, 3]
-    assert np.any(alpha == 255)
-    assert np.any((alpha > 0) & (alpha < 255))
-
-
-def test_steric_map_rgba_antialiases_internal_valid_edge():
-    x = np.linspace(-1.0, 1.0, 5)
-    y = np.linspace(-1.0, 1.0, 5)
-    xx, yy = np.meshgrid(x, y)
-    z = 1.0 - xx * xx - yy * yy
-    z[xx > 0.0] = np.nan
-
-    image = steric_map_rgba(
-        x=x,
-        y=y,
-        z=z,
-        sphere_radius=1.0,
-        vmin=-1.0,
-        vmax=1.0,
-        pixels=64,
-    )
-
-    alpha = image[:, :, 3]
-    coords = -1.0 + (np.arange(64, dtype=float) + 0.5) / 64 * 2.0
-    grid_x, grid_y = np.meshgrid(coords, coords)
-    interior_boundary = (np.abs(grid_x) < 0.08) & (grid_y * grid_y < 0.5)
-    assert np.any((alpha[interior_boundary] > 0) & (alpha[interior_boundary] < 255))
+    assert "<path " not in svg
+    assert "data:image/png" not in svg
 
 
 def test_readme_steric_map_example_has_no_quadrant_labels():
@@ -159,6 +136,8 @@ def test_map_svg_quadrant_labels_are_opt_in(tmp_path):
 
     default_svg = default_path.read_text()
     labelled_svg = labelled_path.read_text()
+    assert "<image " not in default_svg
+    assert "data:image/png" not in default_svg
     assert ">NE</text>" not in default_svg
     assert ">NW</text>" not in default_svg
     assert ">SW</text>" not in default_svg
@@ -189,6 +168,8 @@ def test_overlay_layer_includes_full_opacity_colorbar():
 
     assert 'id="stericrender-map-layer" opacity="0.720"' in svg
     assert 'class="stericrender-colorbar"' in svg
+    assert "<image " not in svg
+    assert "data:image/png" not in svg
     assert svg.count('class="stericrender-vbur-label"') == 1
     assert ">50.00</tspan>" in svg
 

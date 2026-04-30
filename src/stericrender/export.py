@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from stericrender.maps import StericMapResult
-from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_image_svg
+from stericrender.visual import colorbar_svg, contour_segments, steric_map_edge_svg, steric_map_fill_svg
 from stericrender.volume import BuriedVolumeResult
 
 
@@ -78,7 +78,7 @@ def write_map_svg(
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">\n',
         '<rect width="100%" height="100%" fill="#ffffff"/>\n',
         "<style>text{font-family:Arial,sans-serif;fill:#1f2933} .small{font-size:14px}</style>\n",
-        steric_map_image_svg(
+        steric_map_fill_svg(
             x=steric_map.x,
             y=steric_map.y,
             z=steric_map.z,
@@ -91,7 +91,6 @@ def write_map_svg(
             vmax=z_max,
             palette=palette,
             opacity=0.96,
-            pixels=1000,
             bands=34,
         ),
         steric_map_edge_svg(

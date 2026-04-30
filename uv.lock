@@ -1428,7 +1428,6 @@ source = { editable = "." }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pillow" },
     { name = "xyzrender" },
 ]
 
@@ -1459,7 +1458,6 @@ requires-dist = [
     { name = "morfeus-ml", specifier = ">=0.8.0", marker = "extra == 'dev'" },
     { name = "morfeus-ml", specifier = ">=0.8.0", marker = "extra == 'validation'" },
     { name = "numpy", specifier = ">=1.22" },
-    { name = "pillow", specifier = ">=10" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
