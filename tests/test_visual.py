@@ -1,4 +1,6 @@
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -11,6 +13,7 @@ from stericrender.overlay import (
     _molecule_content_bottom,
     _overlay_footer_layout,
     steric_overlay_layer,
+    write_xyzrender_overlay_svg,
 )
 from stericrender.visual import (
     color_for_value,
@@ -193,6 +196,51 @@ def test_overlay_layer_can_hide_vbur_label():
         show_vbur_label=False,
     )
 
+    assert 'class="stericrender-vbur-label"' not in svg
+    assert ">50.00</tspan>" not in svg
+
+
+def test_write_xyzrender_overlay_svg_can_hide_vbur_label(tmp_path, monkeypatch):
+    steric_map = StericMapResult(
+        x=np.array([-1.0, 0.0, 1.0]),
+        y=np.array([-1.0, 0.0, 1.0]),
+        z=np.array([[np.nan, 0.0, np.nan], [1.0, 2.0, 1.0], [np.nan, 0.0, np.nan]]),
+    )
+    volume = BuriedVolumeResult(50.0, 1.0, 2.0, 1.0, 0.1, 10, 20, {}, {})
+    xyz_path = tmp_path / "oriented.xyz"
+    output_path = tmp_path / "overlay.svg"
+    xyz_path.write_text("1\nfixture\nC 0 0 0\n")
+
+    def fake_build_config(*args, **kwargs):
+        return SimpleNamespace(padding=20.0)
+
+    def fake_render(*args, **kwargs):
+        return (
+            '<svg viewBox="0 0 200 200" width="200" height="200"><rect width="100%" height="100%" fill="#fff"/></svg>'
+        )
+
+    monkeypatch.setitem(
+        sys.modules,
+        "xyzrender",
+        SimpleNamespace(load=lambda path: path, render=fake_render),
+    )
+    monkeypatch.setitem(
+        sys.modules,
+        "xyzrender.config",
+        SimpleNamespace(build_config=fake_build_config),
+    )
+
+    write_xyzrender_overlay_svg(
+        oriented_xyz=xyz_path,
+        output_svg=output_path,
+        steric_map=steric_map,
+        volume=volume,
+        sphere_radius=1.0,
+        canvas_size=200,
+        show_vbur_label=False,
+    )
+
+    svg = output_path.read_text()
     assert 'class="stericrender-vbur-label"' not in svg
     assert ">50.00</tspan>" not in svg
 

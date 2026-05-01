@@ -46,7 +46,7 @@ def morfeus_compare(
     All atom indices passed to this function are 1-based to match Morfeus.
     """
     try:
-        from morfeus import BuriedVolume  # ty: ignore[unresolved-import]
+        from morfeus import BuriedVolume
     except ModuleNotFoundError as exc:
         raise RuntimeError("morfeus-ml is required for Morfeus validation") from exc
 
