@@ -155,6 +155,6 @@ If you use this repository, you must cite the following works:
    *Chemical Society Reviews* **2024**, *53*, 853–882.
 
 3. A. S. Goodfellow and B. N. Nguyen,  
-   "xyzrender,"  
+   "Graph-Based Internal Coordinate Analysis for Transition State Characterization",
    *Journal of Chemical Theory and Computation* **2026**.  
    DOI: [`10.1021/acs.jctc.5c02073`](https://doi.org/10.1021/acs.jctc.5c02073)
