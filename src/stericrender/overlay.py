@@ -88,6 +88,7 @@ def write_xyzrender_overlay_svg(
         palette=palette,
         show_contours=show_contours,
         show_colorbar=show_colorbar,
+        show_vbur_label=show_vbur_label,
         footer_layout=footer_layout,
     )
     Path(output_svg).write_text(_insert_before_close(molecule_svg, layer))
