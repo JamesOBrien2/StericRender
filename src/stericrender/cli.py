@@ -137,10 +137,12 @@ def run_map(args: argparse.Namespace) -> None:
         prefix = _frame_prefix(Path(args.output_prefix), frame, multi)
         summaries.append(process_frame(args, frame, prefix))
     if multi:
+        mean_vbur = float(np.mean([s["percent_buried"] for s in summaries]))
+        summary = {"frames": summaries, "mean_percent_buried": mean_vbur}
         summary_path = Path(f"{args.output_prefix}_summary.json")
         summary_path.parent.mkdir(parents=True, exist_ok=True)
-        summary_path.write_text(json.dumps(summaries, indent=2, sort_keys=True) + "\n")
-        print(f"Processed {len(summaries)} frame(s)")
+        summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+        print(f"Processed {len(summaries)} frame(s)  mean %VBur {mean_vbur:.2f}")
         print(f"Wrote {summary_path}")
 
 

@@ -42,7 +42,9 @@ def test_cli_multi_xyz_selected_frames(tmp_path):
     assert frame_15.is_file()
     assert summary.is_file()
     assert json.loads(frame_13.read_text())["metadata"]["frame"] == 13
-    assert len(json.loads(summary.read_text())) == 2
+    summary_data = json.loads(summary.read_text())
+    assert len(summary_data["frames"]) == 2
+    assert "mean_percent_buried" in summary_data
 
 
 def test_cli_overlay_defaults_to_selected_atoms(tmp_path, monkeypatch):
