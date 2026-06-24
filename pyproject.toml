@@ -28,8 +28,8 @@ validation = [
 ]
 dev = [
   "morfeus-ml>=0.8.0",
-  "ruff",
-  "ty",
+  "ruff>=0.15.12",
+  "ty>=0.0.33",
   "pytest",
   "pytest-cov",
 ]
@@ -56,6 +56,9 @@ python = ".venv"
 
 [dependency-groups]
 dev = [
+    "morfeus-ml>=0.8.0",
     "ruff>=0.15.12",
     "ty>=0.0.33",
+    "pytest",
+    "pytest-cov",
 ]

@@ -117,6 +117,7 @@ def test_cli_map_radius_independent_of_sphere_radius(tmp_path, monkeypatch):
 
     def fake_overlay_renderer(**kwargs):
         captured["sphere_radius"] = kwargs["sphere_radius"]
+        captured["map_radius"] = kwargs["map_radius"]
 
     monkeypatch.setattr(cli, "write_xyzrender_overlay_svg", fake_overlay_renderer)
 
@@ -137,7 +138,9 @@ def test_cli_map_radius_independent_of_sphere_radius(tmp_path, monkeypatch):
     )
 
     metadata = json.loads(output_prefix.with_suffix(".json").read_text())["metadata"]
-    assert captured["sphere_radius"] == 5.0
+    # sphere_radius controls the circle and map; map_radius only widens the viewport
+    assert captured["sphere_radius"] == 3.5
+    assert captured["map_radius"] == 5.0
     assert metadata["sphere_radius"] == 3.5
     assert metadata["map_radius"] == 5.0
 

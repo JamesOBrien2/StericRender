@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
 from split_sambvca_si import split_multi_xyz
 
 

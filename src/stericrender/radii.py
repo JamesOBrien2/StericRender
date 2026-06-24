@@ -41,7 +41,7 @@ def radius_for_symbol(symbol: str, radii: str = "scaled-bondi", default: float =
     if radii == "scaled-bondi":
         return BONDI_RADII.get(normalized, default) * 1.17
     if radii == "csd":
-        return CSD_RADII.get(normalized, default * 1.17)
+        return CSD_RADII.get(normalized, default)
     raise ValueError(f"Unknown radii set: {radii}")
 
 
