@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "stericrender"
-version = "1.0.0"
+version = "1.1.0"
 description = "Topographic steric maps and buried volume (%VBur) with publication-quality SVG output."
 readme = "README.md"
 requires-python = ">=3.10"
