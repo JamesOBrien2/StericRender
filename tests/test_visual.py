@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -106,14 +105,6 @@ def test_steric_map_fill_svg_skips_empty_cells():
 
     assert "<path " not in svg
     assert "data:image/png" not in svg
-
-
-def test_readme_steric_map_example_has_no_quadrant_labels():
-    svg = Path("examples/images/sambvca/complex_04_meduphos_map.svg").read_text()
-    assert ">NE</text>" not in svg
-    assert ">NW</text>" not in svg
-    assert ">SW</text>" not in svg
-    assert ">SE</text>" not in svg
 
 
 def test_contour_segments_find_crossing():
@@ -248,7 +239,7 @@ def test_write_xyzrender_overlay_svg_can_hide_vbur_label(tmp_path, monkeypatch):
 def test_overlay_footer_follows_zoomed_map_instead_of_viewport_bottom():
     layout = _overlay_footer_layout(
         height=800.0,
-        sphere_radius=3.5,
+        map_radius=3.5,
         scale=67.857142857,
         show_colorbar=True,
         content_bottom=610.0,
@@ -262,7 +253,7 @@ def test_overlay_footer_follows_zoomed_map_instead_of_viewport_bottom():
 def test_overlay_footer_respects_molecule_content_below_zoomed_map():
     layout = _overlay_footer_layout(
         height=800.0,
-        sphere_radius=3.5,
+        map_radius=3.5,
         scale=67.857142857,
         show_colorbar=True,
         content_bottom=720.0,

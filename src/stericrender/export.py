@@ -117,8 +117,8 @@ def write_map_svg(
     lines.extend(
         [
             f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r_px:.2f}" fill="none" stroke="#1f2933" stroke-width="2"/>\n',
-            f'<line x1="{margin}" y1="{cy:.2f}" x2="{size - margin}" y2="{cy:.2f}" stroke="#1f2933" stroke-width="1.2"/>\n',
-            f'<line x1="{cx:.2f}" y1="{margin}" x2="{cx:.2f}" y2="{size - margin}" stroke="#1f2933" stroke-width="1.2"/>\n',
+            f'<line x1="{cx - r_px:.2f}" y1="{cy:.2f}" x2="{cx + r_px:.2f}" y2="{cy:.2f}" stroke="#1f2933" stroke-width="1.2"/>\n',
+            f'<line x1="{cx:.2f}" y1="{cy - r_px:.2f}" x2="{cx:.2f}" y2="{cy + r_px:.2f}" stroke="#1f2933" stroke-width="1.2"/>\n',
         ]
     )
     if show_quadrant_labels:

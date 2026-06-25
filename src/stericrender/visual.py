@@ -254,7 +254,7 @@ def colorbar_svg(
         )
     lines.append(
         f'<text x="{x + width + 12:.2f}" y="{y + height + font_size + 7:.2f}" '
-        f'font-family="Arial,sans-serif" font-size="{font_size}" fill="#1f2933">(A)</text>\n'
+        f'font-family="Arial,sans-serif" font-size="{font_size}" fill="#1f2933">(Å)</text>\n'
     )
     lines.append("</g>\n")
     return "".join(lines)

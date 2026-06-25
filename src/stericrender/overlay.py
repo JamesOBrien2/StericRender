@@ -28,6 +28,7 @@ def write_xyzrender_overlay_svg(
     steric_map: StericMapResult,
     volume: BuriedVolumeResult,
     sphere_radius: float,
+    map_radius: float | None = None,
     render_config: str = "default",
     canvas_size: int = 800,
     zoom: float = 1.0,
@@ -47,6 +48,10 @@ def write_xyzrender_overlay_svg(
     steric-map origin. The overlay layer then uses the same orthographic
     projection convention as xyzrender: x to the right, y upward, z ignored for
     the 2D topographic map.
+
+    sphere_radius controls the drawn circle and crosshairs (the analysis sphere
+    boundary). map_radius controls the viewport span and map fill extent; it
+    defaults to sphere_radius when not supplied.
     """
     try:
         from xyzrender import load, render
@@ -54,23 +59,24 @@ def write_xyzrender_overlay_svg(
     except ModuleNotFoundError as exc:
         raise RuntimeError("xyzrender is required for overlay SVG output") from exc
 
+    display_radius = map_radius if map_radius is not None else sphere_radius
     cfg = build_config(render_config, canvas_size=canvas_size, orient=False, hy=include_hydrogens, bo=True)
     cfg.fixed_center = (0.0, 0.0)
     if zoom <= 0.0:
         raise ValueError("--zoom must be greater than 0")
-    cfg.fixed_span = 2.0 * sphere_radius * zoom
+    cfg.fixed_span = 2.0 * display_radius * zoom
     mol = load(oriented_xyz)
     molecule_svg = str(render(mol, config=cfg, orient=False, stereo=stereo, stereo_style=stereo_style))
     width, height = _svg_size(molecule_svg, default=canvas_size)
     scale = (canvas_size - 2.0 * cfg.padding) / cfg.fixed_span
-    r = sphere_radius * scale
+    r_clip = display_radius * scale
     if zoom > 1.0:
         molecule_svg = _clip_molecule_to_viewport(molecule_svg)
     else:
-        molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r)
+        molecule_svg = _clip_molecule_to_disk(molecule_svg, cx=width / 2.0, cy=height / 2.0, r=r_clip)
     footer_layout = _overlay_footer_layout(
         height=height,
-        sphere_radius=sphere_radius,
+        map_radius=sphere_radius,
         scale=scale,
         show_colorbar=show_colorbar,
         content_bottom=_molecule_content_bottom(molecule_svg),
@@ -167,7 +173,7 @@ def steric_overlay_layer(
     if footer_layout is None:
         footer_layout = _overlay_footer_layout(
             height=height,
-            sphere_radius=sphere_radius,
+            map_radius=sphere_radius,
             scale=scale,
             show_colorbar=show_colorbar,
         )
@@ -202,13 +208,13 @@ def steric_overlay_layer(
 def _overlay_footer_layout(
     *,
     height: float,
-    sphere_radius: float,
+    map_radius: float,
     scale: float,
     show_colorbar: bool,
     content_bottom: float | None = None,
 ) -> _OverlayFooterLayout:
     """Place overlay annotations after the visible map/molecule content."""
-    map_bottom = height / 2.0 + sphere_radius * scale
+    map_bottom = height / 2.0 + map_radius * scale
     footer_anchor = max(map_bottom, content_bottom if content_bottom is not None else map_bottom)
     label_y = footer_anchor + 40.0
     if show_colorbar:

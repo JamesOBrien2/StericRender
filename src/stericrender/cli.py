@@ -193,7 +193,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
     steric_map = compute_steric_map(
         selected_positions,
         selected_radii,
-        sphere_radius=map_radius,
+        sphere_radius=sphere_radius,
         mesh=args.mesh,
     )
 
@@ -236,7 +236,7 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         f"{prefix}_map.svg",
         steric_map,
         volume,
-        sphere_radius=map_radius,
+        sphere_radius=sphere_radius,
         color_range=color_range,
         palette=args.map_palette,
         show_colorbar=not args.no_colorbar,
@@ -261,7 +261,8 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 output_svg=f"{prefix}_overlay.svg",
                 steric_map=steric_map,
                 volume=volume,
-                sphere_radius=map_radius,
+                sphere_radius=sphere_radius,
+                map_radius=map_radius,
                 render_config=args.render_config,
                 canvas_size=args.overlay_canvas_size,
                 zoom=args.zoom,
