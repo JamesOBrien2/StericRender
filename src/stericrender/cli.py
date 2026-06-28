@@ -124,6 +124,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-vbur-label", action="store_true", help="Hide %%VBur label on overlay SVGs")
     parser.add_argument("--no-contours", action="store_true", help="Hide contour lines on map and overlay SVGs")
     parser.add_argument("--show-quadrants", action="store_true", help="Show NE/NW/SW/SE quadrant labels on map SVGs")
+    parser.add_argument("--no-grid", action="store_true", help="Skip writing grid CSV and NPZ files")
+    parser.add_argument("--no-map", action="store_true", help="Skip writing the standalone map SVG")
     return parser
 
 
@@ -231,20 +233,22 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
         "show_vbur_label": not args.no_vbur_label,
     }
     write_json(prefix.with_suffix(".json"), volume, metadata)
-    write_grid_csv(f"{prefix}_grid.csv", steric_map)
-    write_grid_npz(f"{prefix}_grid.npz", steric_map)
+    if not args.no_grid:
+        write_grid_csv(f"{prefix}_grid.csv", steric_map)
+        write_grid_npz(f"{prefix}_grid.npz", steric_map)
     color_range = tuple(args.color_range) if args.color_range else None
-    write_map_svg(
-        f"{prefix}_map.svg",
-        steric_map,
-        volume,
-        sphere_radius=sphere_radius,
-        color_range=color_range,
-        palette=args.map_palette,
-        show_colorbar=not args.no_colorbar,
-        show_contours=not args.no_contours,
-        show_quadrant_labels=args.show_quadrants,
-    )
+    if not args.no_map:
+        write_map_svg(
+            f"{prefix}_map.svg",
+            steric_map,
+            volume,
+            sphere_radius=sphere_radius,
+            color_range=color_range,
+            palette=args.map_palette,
+            show_colorbar=not args.no_colorbar,
+            show_contours=not args.no_contours,
+            show_quadrant_labels=args.show_quadrants,
+        )
     oriented_xyz = Path(f"{prefix}_oriented.xyz")
     write_xyz(arrays_to_atoms(symbols, oriented.positions), oriented_xyz, title="StericRender oriented")
     if not args.no_overlay:
@@ -283,7 +287,8 @@ def process_frame(args: argparse.Namespace, frame: StructureFrame, prefix: Path)
                 overlay_xyz.unlink(missing_ok=True)
     print(f"%VBur {volume.percent_buried:.2f}")
     print(f"Wrote {prefix.with_suffix('.json')}")
-    print(f"Wrote {prefix}_map.svg")
+    if not args.no_map:
+        print(f"Wrote {prefix}_map.svg")
     if not args.no_overlay:
         print(f"Wrote {prefix}_overlay.svg")
     return {"frame": frame.index, "prefix": str(prefix), "percent_buried": volume.percent_buried}
