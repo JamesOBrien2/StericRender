@@ -6,7 +6,9 @@ authors:
   - given-names: James
     family-names: "O'Brien"
     affiliation: "Department of Chemistry, The University of Manchester"
-version: "1.1.0"
+version: "1.1.1"
+doi: "10.5281/zenodo.21475425"
+date-released: 2026-07-21
 repository-code: "https://github.com/JamesOBrien2/StericRender"
 url: "https://github.com/JamesOBrien2/StericRender"
 license: MIT
