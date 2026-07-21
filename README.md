@@ -12,6 +12,7 @@ StericRender computes topographic steric maps and buried volume (%V*Bur*) for an
 [![Typing: ty](https://img.shields.io/badge/typing-ty-EFC621.svg)](https://github.com/astral-sh/ty)
 [![CI](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/JamesOBrien2/StericRender/branch/main/graph/badge.svg)](https://codecov.io/gh/JamesOBrien2/StericRender)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21474975.svg)](https://doi.org/10.5281/zenodo.21474975)
 
 
 ![zoomed out overlay](examples/images/controls/zoom_overlay.svg)
@@ -143,7 +144,18 @@ steric_map = compute_steric_map(oriented.positions[selected], radii)
 
 ## Citation
 
-If you use this repository, you must cite the following works:
+If you use StericRender in published research, cite the software version used:
+
+> James O'Brien, *StericRender: Topographic Steric Mapping with Molecular
+> Visualisation*, version 1.1.0, computer software, Zenodo, 2026,
+> https://doi.org/10.5281/zenodo.21474975
+
+Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
+GitHub also provides APA and BibTeX entries through the **Cite this repository**
+menu. Cite the version-specific Zenodo DOI so that the exact software used can
+be recovered.
+
+Please also cite the methodological works on which StericRender builds:
 
 1. Laura Falivene, Raffaele Credendino, Albert Poater, Andrea Petta, Luigi Serra, Romina Oliva, Vittorio Scarano, and Luigi Cavallo,  
    "SambVca 2. A Web Tool for Analyzing Catalytic Pockets with Topographic Steric Maps,"  
@@ -152,7 +164,8 @@ If you use this repository, you must cite the following works:
 
 2. Sílvia Escayola, Naeimeh Bahri-Laleh, and Albert Poater,  
    "%VBur index and steric maps: from predictive catalysis to machine learning,"  
-   *Chemical Society Reviews* **2024**, *53*, 853–882.
+   *Chemical Society Reviews* **2024**, *53*, 853–882.  
+   DOI: [`10.1039/D3CS00725A`](https://doi.org/10.1039/D3CS00725A)
 
 3. A. S. Goodfellow and B. N. Nguyen,  
    "Graph-Based Internal Coordinate Analysis for Transition State Characterization",
