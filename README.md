@@ -12,7 +12,7 @@ StericRender computes topographic steric maps and buried volume (%V*Bur*) for an
 [![Typing: ty](https://img.shields.io/badge/typing-ty-EFC621.svg)](https://github.com/astral-sh/ty)
 [![CI](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/JamesOBrien2/StericRender/branch/main/graph/badge.svg)](https://codecov.io/gh/JamesOBrien2/StericRender)
-[![DOI](https://zenodo.org/badge/1225515679.svg)](https://doi.org/10.5281/zenodo.21475425)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21475425.svg)](https://doi.org/10.5281/zenodo.21475425)
 
 ![zoomed out overlay](examples/images/controls/zoom_overlay.svg)
 
@@ -143,16 +143,18 @@ steric_map = compute_steric_map(oriented.positions[selected], radii)
 
 ## Citation
 
-If you use StericRender in published research, cite the software version used:
+If you use StericRender in published research, cite the software version used.
+To cite the project as a whole:
 
 > James O'Brien, *StericRender: Topographic Steric Mapping with Molecular
-> Visualisation*, version 1.1.0, computer software, Zenodo, 2026,
-> https://doi.org/10.5281/zenodo.21474975
+> Visualisation*, computer software, Zenodo, 2026,
+> https://doi.org/10.5281/zenodo.21475425
 
 Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
 GitHub also provides APA and BibTeX entries through the **Cite this repository**
-menu. Cite the version-specific Zenodo DOI so that the exact software used can
-be recovered.
+menu. The DOI above represents all StericRender versions and always resolves to
+the latest release. For reproducibility, use the version-specific DOI shown on
+the relevant Zenodo release page.
 
 Please also cite the methodological works on which StericRender builds:
 
