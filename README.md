@@ -143,8 +143,7 @@ steric_map = compute_steric_map(oriented.positions[selected], radii)
 
 ## Citation
 
-If you use StericRender in published research, cite the software version used.
-To cite the project as a whole:
+If you use StericRender in published research, please cite:
 
 > James O'Brien, *StericRender: Topographic Steric Mapping with Molecular
 > Visualisation*, computer software, Zenodo, 2026,
@@ -152,9 +151,8 @@ To cite the project as a whole:
 
 Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
 GitHub also provides APA and BibTeX entries through the **Cite this repository**
-menu. The DOI above represents all StericRender versions and always resolves to
-the latest release. For reproducibility, use the version-specific DOI shown on
-the relevant Zenodo release page.
+menu. This permanent DOI covers all StericRender releases and resolves to the
+latest archived version.
 
 Please also cite the methodological works on which StericRender builds:
 
