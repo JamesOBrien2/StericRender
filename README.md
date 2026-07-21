@@ -12,7 +12,7 @@ StericRender computes topographic steric maps and buried volume (%V*Bur*) for an
 [![Typing: ty](https://img.shields.io/badge/typing-ty-EFC621.svg)](https://github.com/astral-sh/ty)
 [![CI](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JamesOBrien2/StericRender/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/JamesOBrien2/StericRender/branch/main/graph/badge.svg)](https://codecov.io/gh/JamesOBrien2/StericRender)
-
+[![DOI](https://zenodo.org/badge/1225515679.svg)](https://doi.org/10.5281/zenodo.21475425)
 
 ![zoomed out overlay](examples/images/controls/zoom_overlay.svg)
 
