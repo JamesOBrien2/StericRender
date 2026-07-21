@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use StericRender in your research, please cite the software and the underlying methods listed in the README."
+title: "StericRender: Topographic Steric Mapping with Molecular Visualisation"
+type: software
+authors:
+  - given-names: James
+    family-names: "O'Brien"
+    affiliation: "Department of Chemistry, The University of Manchester"
+version: "1.1.0"
+doi: "10.5281/zenodo.21474975"
+repository-code: "https://github.com/JamesOBrien2/StericRender"
+url: "https://github.com/JamesOBrien2/StericRender"
+license: MIT
+keywords:
+  - computational chemistry
+  - buried volume
+  - molecular visualisation
+  - steric maps
+  - organometallic chemistry
+abstract: >-
+  StericRender computes topographic steric maps and buried volume (%VBur)
+  descriptors for molecular structures and produces publication-quality SVG
+  figures from the command line.
